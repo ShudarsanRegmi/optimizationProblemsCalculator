@@ -4,7 +4,7 @@
 """
 
 # Rows = No. of Constraintsi + 1(Obj)
-# Cols = No. of vars + NO of constraints + 1 (RHS)
+# Cols = No. of vars + NO of constraints + 1 (RHS) + 1(Obj)
 
 # for 2d
 
@@ -15,7 +15,9 @@ NO_OF_CONS = 2
 
 
 rows = NO_OF_CONS + 1
-cols = NO_OF_VARS + NO_OF_CONS + 1
+cols = NO_OF_VARS + NO_OF_CONS + 2
+
+print(" rows = {}, cols = {}".format(rows,cols))
 
 
 def index_of_most_negative_element(lst):
@@ -33,30 +35,34 @@ def index_of_most_negative_element(lst):
     else:
         return False
 
-def compute_ratios(table,key_row):
+def compute_ratios(table,key_col):
     ratios = []
-    # rhs = [ i[cols-1] for i in table]
-    # ratios = [ i[cols-1]/i[key_row] for i in table]
 
-    for i in table:
-        if i[key_row]<=0:
+    for row in table:
+        if row[key_col]<=0:
             ratios.append(-1)
         else:
-            ratio = i[cols-1] / i[key_row]
+            print(row[cols-1], row[key_col])
+            ratio = row[cols-1] / row[key_col]
             ratios.append(ratio)
             
             
 
-    print(ratios)
+    print("Ratios = ", ratios)
     return ratios
 
     
-def compute_key_column(ratios):
+def compute_key_row(ratios):
     maxr = ratios[0]
     maxri = 0
     for i in range(len(ratios)):
-        if ratios[i]>ratios[maxri]:
+        if ratios[i]<ratios[maxri] and ratios[i] != -1:
             maxri=i
+            print("max ratio index changed")
+        elif ratios[i] == ratios[maxri]:
+            print("ratios are matching")
+        else:
+            pass
 
     return maxri
      
@@ -73,22 +79,54 @@ X >= 0, Y >= 0
 """
 
 
-table = [ [3, 4, 1, 0,78], [4, 1, 0, 1, 36], [-5, -4, 0, 0, 1]]
+table = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 
 last_row = len(table)-1
 
-key_row = index_of_most_negative_element(table[last_row])
+key_col = index_of_most_negative_element(table[last_row])
 
-print("Key row = ", key_row)
+print("Key col = ", key_col)
 
 # find the key column
 
-ratios = compute_ratios(table, key_row)
+ratios = compute_ratios(table, key_col)
 
 
-key_column = compute_key_column(ratios)
+key_row = compute_key_row(ratios)
 
-print("Key Column = ", key_column)
+print("Key row = ", key_row)
 
+
+# Now in next table teh keyrow should be divided by key element
+
+key_elem = table[key_row][key_col]
+
+table2 = table.copy() 
+print(table)
+
+# for i in range(cols):
+#     elem = table2[key_row][i]
+#     table2[key_row][i] = elem / key_elem  
+
+# print(table2)
+
+key_elems = [elem/key_elem for elem in table2[key_row]] 
+
+print("After key row operation = ", key_elems)
+for row in range(len(table2)):
+    if row == key_row:
+        table2[row] = key_elems
+        print("skipping, key row")
+        continue
+    else:
+        print("not key row")
+        for col in range(len(table2[row])):
+            val = table2[row][col]
+            print(val)
+            table2[row][col] = val + (-table2[row][key_col]*key_elems[col]) 
+            # table2[row][col] = val* (-table2[row][key_row]) +  key_elems[col]
+            # table2[row][col] = val - table2[row][key_row] * key_elems[col]  # Correct formula for updating
+
+print(table2)
 
 
