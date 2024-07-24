@@ -67,6 +67,18 @@ def compute_key_row(ratios):
     return maxri
      
 
+def check_optimality_condition(table):
+    # DOUBT: whether this is to be checked for all the eoements in the Z row or it is to be checked for only decision and slack variables
+    for col in range(cols-2):
+            val = table[rows-1][col]
+            if val < 0:
+                return False
+        
+    return True
+        
+    # check the last row of the table and check if all the values are positive
+    
+    
 
 
 table = []
@@ -131,3 +143,57 @@ for row in range(len(table2)):
 print(table2)
 
 
+if check_optimality_condition(table2):
+    print("The solution is optimal")
+
+# for third iteraiton
+print("---Third iteration---")
+
+last_row = len(table2)-1
+
+key_col = index_of_most_negative_element(table2[last_row])
+
+print("Key col = ", key_col)
+
+# find the key column
+
+ratios = compute_ratios(table, key_col)
+
+
+key_row = compute_key_row(ratios)
+
+print("Key row = ", key_row)
+
+
+# Now in next table teh keyrow should be divided by key element
+
+key_elem = table2[key_row][key_col]
+
+table3 = table2.copy() 
+print(table3)
+
+# for i in range(cols):
+#     elem = table2[key_row][i]
+#     table2[key_row][i] = elem / key_elem  
+
+# print(table2)
+
+key_elems = [elem/key_elem for elem in table3[key_row]] 
+
+print("After key row operation = ", key_elems)
+for row in range(len(table3)):
+    if row == key_row:
+        table3[row] = key_elems
+        print("skipping, key row")
+        continue
+    else:
+        print("not key row")
+        multiplier = -table3[row][key_col]
+        for col in range(len(table3[row])):
+            val = table3[row][col]
+            elem_from_key_elems = key_elems[col]
+            # print(val, multiplier, elem_from_key_elems)
+            new_elem =  val + (multiplier)*key_elems[col]
+            # print("new elem = ", new_elem)
+            table3[row][col] = new_elem 
+print(table3)
