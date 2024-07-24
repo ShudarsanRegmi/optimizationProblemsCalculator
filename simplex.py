@@ -9,7 +9,6 @@
 # for 2d
 
 
-
 NO_OF_VARS = 2
 NO_OF_CONS = 2
 
@@ -91,7 +90,9 @@ X >= 0, Y >= 0
 """
 
 
-table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+# table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+table1 = [ [10, 20, 1, 0, 0, 120], [8, 8, 0, 1, 0, 80], [-12, -16, 0, 0, 1, 0]]
+
 # Generalizing
 tables = [table1]
 optimal = False
@@ -116,6 +117,8 @@ while not optimal:
     # creating new table for next iteration
     tables.append(current_table.copy())
     current_iteration+=1
+    current_table = tables[current_iteration] # T O D O: fix the above redundant line
+
 
     key_elems = [elem / key_elem for elem in current_table[key_row]]
 
@@ -127,7 +130,10 @@ while not optimal:
             continue
         else:
             print("not key row")
-            multiplier = -current_table[row][key_col]
+            multiplier = -(current_table[row][key_col])
+            print("Multipler for this iteration = ", multiplier)
+            print(row,key_col)
+            print(current_table)
             for col in range(len(current_table[row])):
                 val = current_table[row][col]
                 elem_from_key_elems = key_elems[col]
@@ -142,5 +148,5 @@ while not optimal:
         print("The solution is optimal")
         break
 
-
+print("Printing tables")
 print(tables)
