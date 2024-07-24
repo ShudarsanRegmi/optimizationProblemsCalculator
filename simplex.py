@@ -51,7 +51,7 @@ def compute_ratios(table,key_col):
     print("Ratios = ", ratios)
     return ratios
 
-    
+
 def compute_key_row(ratios):
     maxr = ratios[0]
     maxri = 0
@@ -91,114 +91,56 @@ X >= 0, Y >= 0
 """
 
 
-table = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
-
-last_row = len(table)-1
-
-key_col = index_of_most_negative_element(table[last_row])
-
-print("Key col = ", key_col)
-
-# find the key column
-
-ratios = compute_ratios(table, key_col)
+table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+# Generalizing
+tables = [table1]
+optimal = False
+current_iteration = 0
 
 
-key_row = compute_key_row(ratios)
+while not optimal:
+    # table1 = [[3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 
-print("Key row = ", key_row)
+    current_table = tables[current_iteration]
+    print(current_table)
+    last_row = len(current_table) - 1
+    key_col = index_of_most_negative_element(current_table[last_row])
+    ratios = compute_ratios(current_table, key_col)
+    key_row = compute_key_row(ratios)
 
+    print("Key col = ", key_col)
+    print("Key row = ", key_row)
 
-# Now in next table teh keyrow should be divided by key element
+    key_elem = current_table[key_row][key_col]
 
-key_elem = table[key_row][key_col]
+    # creating new table for next iteration
+    tables.append(current_table.copy())
+    current_iteration+=1
 
-table2 = table.copy() 
-print(table)
+    key_elems = [elem / key_elem for elem in current_table[key_row]]
 
-# for i in range(cols):
-#     elem = table2[key_row][i]
-#     table2[key_row][i] = elem / key_elem  
+    print("After key row operation = ", key_elems)
+    for row in range(len(current_table)):
+        if row == key_row:
+            current_table[row] = key_elems
+            print("skipping, key row")
+            continue
+        else:
+            print("not key row")
+            multiplier = -current_table[row][key_col]
+            for col in range(len(current_table[row])):
+                val = current_table[row][col]
+                elem_from_key_elems = key_elems[col]
+                # print(val, multiplier, elem_from_key_elems)
+                new_elem = val + (multiplier) * key_elems[col]
+                # print("new elem = ", new_elem)
+                current_table[row][col] = new_elem
+    print(current_table)
 
-# print(table2)
-
-key_elems = [elem/key_elem for elem in table2[key_row]] 
-
-print("After key row operation = ", key_elems)
-for row in range(len(table2)):
-    if row == key_row:
-        table2[row] = key_elems
-        print("skipping, key row")
-        continue
-    else:
-        print("not key row")
-        multiplier = -table2[row][key_col]
-        for col in range(len(table2[row])):
-            val = table2[row][col]
-            elem_from_key_elems = key_elems[col]
-            # print(val, multiplier, elem_from_key_elems)
-            new_elem =  val + (multiplier)*key_elems[col]
-            # print("new elem = ", new_elem)
-            table2[row][col] = new_elem 
-print(table2)
-
-
-if check_optimality_condition(table2):
-    print("The solution is optimal")
-
-# for third iteraiton
-print("---Third iteration---")
-# for this iteration key_row = 0 and key_column = 1
-last_row = len(table2)-1
-
-key_col = index_of_most_negative_element(table2[last_row])
-
-print("Key col = ", key_col)
-
-# find the key column
-
-ratios = compute_ratios(table, key_col)
+    # checking for optimality condition
+    if check_optimality_condition(current_table):
+        print("The solution is optimal")
+        break
 
 
-key_row = compute_key_row(ratios)
-
-print("Key row = ", key_row)
-
-
-# Now in next table teh keyrow should be divided by key element
-
-key_elem = table2[key_row][key_col]
-print("Key Elem = ", key_elem)
-
-table3 = table2.copy() 
-print(table3)
-
-# for i in range(cols):
-#     elem = table2[key_row][i]
-#     table2[key_row][i] = elem / key_elem  
-
-# print(table2)
-
-key_elems = [elem/key_elem for elem in table3[key_row]]
-print("Key Elems = ", key_elems)
-
-print("After key row operation = ", key_elems)
-for row in range(len(table3)):
-    if row == key_row:
-        table3[row] = key_elems
-        print("skipping, key row")
-        continue
-    else:
-        print("not key row")
-        multiplier = -table3[row][key_col]
-        for col in range(len(table3[row])):
-            val = table3[row][col]
-            elem_from_key_elems = key_elems[col]
-            print(val, multiplier, elem_from_key_elems)
-            new_elem =  val + (multiplier)*key_elems[col]
-            # print("new elem = ", new_elem)
-            table3[row][col] = new_elem 
-print(table3)
-
-if check_optimality_condition(table3):
-    print("The solution is optimal")
+print(tables)
