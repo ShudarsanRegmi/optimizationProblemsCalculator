@@ -11,7 +11,7 @@
 # for 2d
 
 NO_OF_VARS = 2
-NO_OF_CONS = 2
+NO_OF_CONS = 3
 
 
 rows = NO_OF_CONS + 1
@@ -82,34 +82,51 @@ def check_optimality_condition(table):
 def display_solution(table, basic_variables):
     Z = table[-1][-1]
     print("Z = {}".format(Z))
-    if ("x1" in basic_variables):
-        x1 = table[basic_variables.index("x1")][-1]
-        print("x1 = {}".format(x1))
 
-    if ("x2" in basic_variables):
-        x2 = table[basic_variables.index("x2")][-1]
-        print("x2 = {}".format(x2))
+    for vari, var in enumerate(basic_variables):
+        if var.startswith("x"):
+            print(f"{var} = {table[basic_variables.index(var)][-1]}")
+
+
+    # if ("x1" in basic_variables):
+    #     x1 = table[basic_variables.index("x1")][-1]
+    #     print("x1 = {}".format(x1))
+    #
+    # if ("x2" in basic_variables):
+    #     x2 = table[basic_variables.index("x2")][-1]
+    #     print("x2 = {}".format(x2))
 
 def change_basic_vars(basic_variables, key_row, key_col):
     # Todo: Generalize this logic
-    if key_col == 0:
-        if key_row == 0:
-            basic_variables[0] = "x1"
-        elif key_row == 1:
-            basic_variables[1] = "x1"
-        else:
-            pass
-    elif key_col == 1:
-        if key_row == 0:
-            basic_variables[0] = "x2"
-        elif key_row == 1:
-            basic_variables[1] = "x1"
-        else:
-            pass
+
+    # change has to be done at the index of key row
+    # variable corresponding to key column is entering
+    basic_variables[key_row] = f"x{key_col}"
     return basic_variables
 
+    # if key_col == 0:
+    #     if key_row == 0:
+    #         basic_variables[0] = "x1"
+    #     elif key_row == 1:
+    #         basic_variables[1] = "x1"
+    #     else:
+    #         pass
+    # elif key_col == 1:
+    #     if key_row == 0:
+    #         basic_variables[0] = "x2"
+    #     elif key_row == 1:
+    #         basic_variables[1] = "x1"
+    #     else:
+    #         pass
+    # return basic_variables
 
-
+def initial_basic_variables_column():
+    initial_basic_variables = []
+    while len(initial_basic_variables) != NO_OF_CONS:
+        initial_basic_variables.append(f"s{len(initial_basic_variables)}")
+    initial_basic_variables.append("Z")
+    print(initial_basic_variables)
+    return initial_basic_variables
 
 
 table = []
@@ -124,8 +141,13 @@ X >= 0, Y >= 0
 
 # table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 # table1 = [ [10, 20, 1, 0, 0, 120], [8, 8, 0, 1, 0, 80], [-12, -16, 0, 0, 1, 0]]
-table1 = [ [1, 1, 1, 0, 0, 12], [2, 1, 0, 1, 0, 16], [-40, -30, 0, 0, 1, 0]]
-basic_variables = ["s1","s2","Z"] # Todo: Make some general logic
+# table1 = [ [1, 1, 1, 0, 0, 12], [2, 1, 0, 1, 0, 16], [-40, -30, 0, 0, 1, 0]]
+
+# When no. of constraints = 3
+table1 = [ [2, 1, 1, 0, 0, 0, 10], [3, 3, 0, 1, 0,0, 20],[2, 4, 0, 0, 1, 0 , 20], [-20, -30, 0, 0, 0, 1, 0]]
+
+# basic_variables = ["s1","s2","Z"] # Todo: Make some general logic
+basic_variables = initial_basic_variables_column()
 # Generalizing
 tables = [table1]
 optimal = False
@@ -188,6 +210,6 @@ while not optimal:
 
 print("Printing tables")
 print(tables)
-
+print(basic_variables)
 print(tables[-1])
 display_solution(tables[-1], basic_variables)
