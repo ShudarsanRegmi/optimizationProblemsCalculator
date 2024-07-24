@@ -1,0 +1,5 @@
+Maximize: Z = 40x1 + 30x2
+Subject to: x1 + x2 <= 12
+2x1 + x2 <= 16
+x1 >= 0, x2 >= 0
+Solution: Z = 400 @ x1 = 4 and x2 = 8
