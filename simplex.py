@@ -120,13 +120,14 @@ for row in range(len(table2)):
         continue
     else:
         print("not key row")
+        multiplier = -table2[row][key_col]
         for col in range(len(table2[row])):
             val = table2[row][col]
-            print(val)
-            table2[row][col] = val + (-table2[row][key_col]*key_elems[col]) 
-            # table2[row][col] = val* (-table2[row][key_row]) +  key_elems[col]
-            # table2[row][col] = val - table2[row][key_row] * key_elems[col]  # Correct formula for updating
-
+            elem_from_key_elems = key_elems[col]
+            # print(val, multiplier, elem_from_key_elems)
+            new_elem =  val + (multiplier)*key_elems[col]
+            # print("new elem = ", new_elem)
+            table2[row][col] = new_elem 
 print(table2)
 
 
