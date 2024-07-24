@@ -3,11 +3,12 @@
 - here mostly we're interested in both cell and comuted value. So don't calculate the value alone
 """
 
+# Todo: Track the Entering and leaving variables
+
 # Rows = No. of Constraintsi + 1(Obj)
 # Cols = No. of vars + NO of constraints + 1 (RHS) + 1(Obj)
 
 # for 2d
-
 
 NO_OF_VARS = 2
 NO_OF_CONS = 2
@@ -76,8 +77,39 @@ def check_optimality_condition(table):
     return True
         
     # check the last row of the table and check if all the values are positive
-    
-    
+
+
+def display_solution(table, basic_variables):
+    Z = table[-1][-1]
+    print("Z = {}".format(Z))
+    if ("x1" in basic_variables):
+        x1 = table[basic_variables.index("x1")][-1]
+        print("x1 = {}".format(x1))
+
+    if ("x2" in basic_variables):
+        x2 = table[basic_variables.index("x2")][-1]
+        print("x2 = {}".format(x2))
+
+def change_basic_vars(basic_variables, key_row, key_col):
+    # Todo: Generalize this logic
+    if key_col == 0:
+        if key_row == 0:
+            basic_variables[0] = "x1"
+        elif key_row == 1:
+            basic_variables[1] = "x1"
+        else:
+            pass
+    elif key_col == 1:
+        if key_row == 0:
+            basic_variables[0] = "x2"
+        elif key_row == 1:
+            basic_variables[1] = "x1"
+        else:
+            pass
+    return basic_variables
+
+
+
 
 
 table = []
@@ -91,8 +123,9 @@ X >= 0, Y >= 0
 
 
 # table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
-table1 = [ [10, 20, 1, 0, 0, 120], [8, 8, 0, 1, 0, 80], [-12, -16, 0, 0, 1, 0]]
-
+# table1 = [ [10, 20, 1, 0, 0, 120], [8, 8, 0, 1, 0, 80], [-12, -16, 0, 0, 1, 0]]
+table1 = [ [1, 1, 1, 0, 0, 12], [2, 1, 0, 1, 0, 16], [-40, -30, 0, 0, 1, 0]]
+basic_variables = ["s1","s2","Z"] # Todo: Make some general logic
 # Generalizing
 tables = [table1]
 optimal = False
@@ -111,6 +144,11 @@ while not optimal:
 
     print("Key col = ", key_col)
     print("Key row = ", key_row)
+
+    # change the basic variables list
+    basic_variables = change_basic_vars(basic_variables, key_row, key_col)
+    print("basic variables changed")
+    print(basic_variables)
 
     key_elem = current_table[key_row][key_col]
 
@@ -150,3 +188,6 @@ while not optimal:
 
 print("Printing tables")
 print(tables)
+
+print(tables[-1])
+display_solution(tables[-1], basic_variables)
