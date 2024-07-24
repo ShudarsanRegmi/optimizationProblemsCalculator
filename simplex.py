@@ -148,7 +148,7 @@ if check_optimality_condition(table2):
 
 # for third iteraiton
 print("---Third iteration---")
-
+# for this iteration key_row = 0 and key_column = 1
 last_row = len(table2)-1
 
 key_col = index_of_most_negative_element(table2[last_row])
@@ -168,6 +168,7 @@ print("Key row = ", key_row)
 # Now in next table teh keyrow should be divided by key element
 
 key_elem = table2[key_row][key_col]
+print("Key Elem = ", key_elem)
 
 table3 = table2.copy() 
 print(table3)
@@ -178,7 +179,8 @@ print(table3)
 
 # print(table2)
 
-key_elems = [elem/key_elem for elem in table3[key_row]] 
+key_elems = [elem/key_elem for elem in table3[key_row]]
+print("Key Elems = ", key_elems)
 
 print("After key row operation = ", key_elems)
 for row in range(len(table3)):
@@ -192,8 +194,11 @@ for row in range(len(table3)):
         for col in range(len(table3[row])):
             val = table3[row][col]
             elem_from_key_elems = key_elems[col]
-            # print(val, multiplier, elem_from_key_elems)
+            print(val, multiplier, elem_from_key_elems)
             new_elem =  val + (multiplier)*key_elems[col]
             # print("new elem = ", new_elem)
             table3[row][col] = new_elem 
 print(table3)
+
+if check_optimality_condition(table3):
+    print("The solution is optimal")
