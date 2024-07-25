@@ -11,7 +11,7 @@
 # for 2d
 
 NO_OF_VARS = 2
-NO_OF_CONS = 3
+NO_OF_CONS = 2
 
 
 rows = NO_OF_CONS + 1
@@ -104,21 +104,6 @@ def change_basic_vars(basic_variables, key_row, key_col):
     basic_variables[key_row] = f"x{key_col}"
     return basic_variables
 
-    # if key_col == 0:
-    #     if key_row == 0:
-    #         basic_variables[0] = "x1"
-    #     elif key_row == 1:
-    #         basic_variables[1] = "x1"
-    #     else:
-    #         pass
-    # elif key_col == 1:
-    #     if key_row == 0:
-    #         basic_variables[0] = "x2"
-    #     elif key_row == 1:
-    #         basic_variables[1] = "x1"
-    #     else:
-    #         pass
-    # return basic_variables
 
 def initial_basic_variables_column():
     initial_basic_variables = []
@@ -139,12 +124,41 @@ X >= 0, Y >= 0
 """
 
 
-# table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 # table1 = [ [10, 20, 1, 0, 0, 120], [8, 8, 0, 1, 0, 80], [-12, -16, 0, 0, 1, 0]]
 # table1 = [ [1, 1, 1, 0, 0, 12], [2, 1, 0, 1, 0, 16], [-40, -30, 0, 0, 1, 0]]
 
 # When no. of constraints = 3
-table1 = [ [2, 1, 1, 0, 0, 0, 10], [3, 3, 0, 1, 0,0, 20],[2, 4, 0, 0, 1, 0 , 20], [-20, -30, 0, 0, 0, 1, 0]]
+# table1 = [ [2, 1, 1, 0, 0, 0, 10], [3, 3, 0, 1, 0,0, 20],[2, 4, 0, 0, 1, 0 , 20], [-20, -30, 0, 0, 0, 1, 0]]
+
+# table1 = [ [10, 2, 1, 1, 0, 0, 0, 100], [7, 3, 2, 0, 1, 0, 0, 77], [2, 4, 1, 0, 0, 1, 0, 80], [-12, -3, -1, 0, 0, 0, 1, 0] ]
+
+# table1 = [ [18, 28, 4, 5, -2125, 0, 0, 0, 100], [7, 3, 2, 0, 1, 0, 0, 0, 77], [2, 4, 1, 0, 0, 1, 0, 0, 80], [-12, -3, -1, 0, 0, 0, 1, 0] ]
+
+
+# Todo: To check  whether a 4 and 5 variable problems is working fine or not
+# Example Problem with iteratio tables : https://www.emathhelp.net/en/calculators/linear-programming/simplex-method-calculator/?z=1500x_1+%2B+2500x_2+%2B+2000x_3+%2B+3000x_4&max=on&c=20x_1+%2B+30x_2+%2B+10x_3+%2B+15x_4+-+2000x_5+%3C%3D+0%0D%0A-10x_1+%2B+5x_2+%2B+5x_3+%2B+5x_4++%3C%3D+0%0D%0A5x_1+-+15x_2+%2B+5x_3+%2B+10x_4++%3C%3D+0%0D%0A10x_1+%2B+5x_2+-+20x_3+-+20x_4++%3C%3D+0%0D%0A30x_1+%2B+40x_2+%2B+50x_3+%2B+60x_4+%2B+3x_5+%3C%3D+25000%0D%0Ax_1+%3E%3D+0%2C+x_2+%3E%3D+0%2C+x_3+%3E%3D+0%2C+x_4+%3E%3D+0%2C+x_5+%3E%3D+0&m=m
+# table1 = [
+#     [20, 30, 10, 15, -2000, 1, 0, 0, 0, 0, 0, 2000],  # Constraint 1
+#     [-10, 5, 5, 5, 0, 0, 1, 0, 0, 0, 0, 0],            # Constraint 2
+#     [5, -15, 5, 10, 0, 0, 0, 1, 0, 0, 0, 0],            # Constraint 3
+#     [10, 5, -20, -20, 0, 0, 0, 0, 1, 0, 0, 0],          # Constraint 4
+#     [30, 40, 50, 60, 3, 0, 0, 0, 0, 0, 0, 25000],       # Constraint 5
+#     [-1500, -2500, -2000, -3000, 0, 0, 0, 0, 0, 0, 1, 0] # Objective function Z
+# ]
+    # # Columns:  [ x1,    x2,    x3,    x4,     x5,    s1,  slack1, slack2, slack3, slack4, Z,    RHS]
+#     table1 = [
+#         [18,    28,    4,   5,        -2125,   1,    0,    0,      0,      0,      0,   0,    0],   # Constraint 1
+#         [0,     0,     0,     0,      1,       0,   1,     0,      0,      0,      0,   0,  300],   # Constraint 2
+#         [-0.8,  0.2,   0.2,   0.2,    0,       0,   0,     1,      0,      0,      0,   0,    0],   # Constraint 3
+#         [0.1,  -0.9,   0.1,   0.1,    0,       0,   0,     0,      1,      0,      0,   0,    0],   # Constraint 4
+#         [0.25,  0.25, -0.75, -0.75,   0,       0,   0,     0,      0,      1,      0,   0,    0],   # Constraint 5
+#         [50,    70,   130,   160,     2,       0,   0,     0,      0,      0,      1,   0, 15000],  # Constraint 6
+#         [-1000, -1900, -2700, -3400,  0,       0,   0,     0,      0,      0,      0,   1,    0]    # Objective function Z
+#     ]
+
+
+
 
 # basic_variables = ["s1","s2","Z"] # Todo: Make some general logic
 basic_variables = initial_basic_variables_column()
