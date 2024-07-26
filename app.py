@@ -44,6 +44,8 @@ if num_variables > 0 and num_constraints > 0:
     if st.button('Calculate'):
         # Prepare data for simplex.py
         data = {
+            'num_of_vars': num_variables,
+            'num_of_cons': num_constraints,
             'objective': objective,
             'constraints': constraints
         }
