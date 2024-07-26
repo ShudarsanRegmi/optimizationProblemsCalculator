@@ -1,3 +1,6 @@
+import sys
+import json
+from utils.input_parser import parse_simplex_input
 """
  SOME NOTES WHILE WRITING CODE
 - here mostly we're interested in both cell and comuted value. So don't calculate the value alone
@@ -121,10 +124,12 @@ Z = 5X + 4Y
 3X + 4Y <= 78
 4X + 1Y <= 36
 X >= 0, Y >= 0
+Solution Link: https://www.emathhelp.net/en/calculators/linear-programming/simplex-method-calculator/?z=5x_1+%2B+4x_2&max=on&c=3x_1+%2B+4x_2+%3C%3D+78%0D%0A4x_1+%2B+1x_2+%3C%3D+36%0D%0Ax_1+%3E%3D+0%2C+x_2+%3E%3D+0&m=m
 """
 
+# tablne1 = [ [3, 4, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 
-table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+# table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 # table1 = [ [10, 20, 1, 0, 0, 120], [8, 8, 0, 1, 0, 80], [-12, -16, 0, 0, 1, 0]]
 # table1 = [ [1, 1, 1, 0, 0, 12], [2, 1, 0, 1, 0, 16], [-40, -30, 0, 0, 1, 0]]
 
@@ -158,6 +163,22 @@ table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 #     ]
 
 
+# table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+# if __name__ == "__main__":
+input_file = sys.argv[1]
+with open(input_file, 'r') as f:
+    data = json.load(f)
+
+# json parser
+# Example JSON input
+# json_input = '{"objective": [5.0, 4.0], "constraints": [[3.0, 4.0, 78.0], [4.0, 1.0, 36.0]]}'
+
+# Parse the input
+data_str = json.dumps(data)
+print(data_str)
+print("Printing table1")
+table1 = parse_simplex_input(data_str)
+print(table1)
 
 
 # basic_variables = ["s1","s2","Z"] # Todo: Make some general logic
@@ -166,6 +187,10 @@ basic_variables = initial_basic_variables_column()
 tables = [table1]
 optimal = False
 current_iteration = 0
+
+
+
+
 
 
 while not optimal:
