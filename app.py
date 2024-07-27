@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 import subprocess
 import json
-
+from simplex import main
+import pickle
 
 # Function to call your simplex.py script
 def call_simplex(data):
@@ -11,9 +12,12 @@ def call_simplex(data):
     with open('simplex_input.json', 'w') as f:
         json.dump(data, f)
 
+
     # Call the simplex.py script
-    result = subprocess.run(['python', 'simplex.py', 'simplex_input.json'], capture_output=True, text=True)
-    return result.stdout
+    output_file = main('simplex_input.json')
+    return output_file
+    # result = subprocess.run(['python', 'simplex.py', 'simplex_input.json'], capture_output=True, text=True)
+    # return result.stdout
 
 
 st.title("Linear Programming Calculator")
@@ -49,6 +53,24 @@ if num_variables > 0 and num_constraints > 0:
             'objective': objective,
             'constraints': constraints
         }
-        result = call_simplex(data)
-        st.subheader("Result")
-        st.write(result)
+        result_file = call_simplex(data)
+        print("Printing result from app.py")
+        print(result_file)
+        st.write(f"Result has been saved in: ", result_file)
+
+        # Read the result from the temporary file
+        with open(result_file, 'rb') as f:
+            tables = pickle.load(f)
+
+        # Display each table using Streamlit
+        st.write("Simplex Tables:")
+        for i, table in enumerate(tables):
+            st.write(f"Iteration {i + 1}")
+            st.table(table)
+
+        # Inform the user where the result has been saved
+        st.write(f"Result has been saved in: {result_file}")
+
+        # Write the code to parse the list
+        # st.subheader("Result")
+        # st.write(result)
