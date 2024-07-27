@@ -1,6 +1,9 @@
 import sys
 import json
 from utils.input_parser import parse_simplex_input
+import tempfile
+import pickle
+
 """
  SOME NOTES WHILE WRITING CODE
 - here mostly we're interested in both cell and comuted value. So don't calculate the value alone
@@ -165,90 +168,97 @@ Solution Link: https://www.emathhelp.net/en/calculators/linear-programming/simpl
 
 # table1 = [ [3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
 # if __name__ == "__main__":
-input_file = sys.argv[1]
-with open(input_file, 'r') as f:
-    data = json.load(f)
+
+
+# input_file = sys.argv[1]
+# with open(input_file, 'r') as f:
+#     data = json.load(f)
 
 # json parser
 # Example JSON input
 # json_input = '{"objective": [5.0, 4.0], "constraints": [[3.0, 4.0, 78.0], [4.0, 1.0, 36.0]]}'
 
 # Parse the input
-data_str = json.dumps(data)
-print(data_str)
-print("Printing table1")
-table1 = parse_simplex_input(data_str)
-print(table1)
 
+def main(input_file):
+    with open(input_file, 'r') as f:
+        data = json.load(f)
 
-# basic_variables = ["s1","s2","Z"] # Todo: Make some general logic
-basic_variables = initial_basic_variables_column()
-# Generalizing
-tables = [table1]
-optimal = False
-current_iteration = 0
+    data_str = json.dumps(data)
+    print(data_str)
+    print("Printing table1")
+    table1 = parse_simplex_input(data_str)
+    print(table1)
 
+    basic_variables = initial_basic_variables_column()
+    tables = [table1]
+    optimal = False
+    current_iteration = 0
 
+    while not optimal:
+        current_table = tables[current_iteration]
+        print(current_table)
+        last_row = len(current_table) - 1
+        key_col = index_of_most_negative_element(current_table[last_row])
+        ratios = compute_ratios(current_table, key_col)
+        key_row = compute_key_row(ratios)
 
+        print("Key col = ", key_col)
+        print("Key row = ", key_row)
 
+        basic_variables = change_basic_vars(basic_variables, key_row, key_col)
+        print("basic variables changed")
+        print(basic_variables)
 
+        key_elem = current_table[key_row][key_col]
 
-while not optimal:
-    # table1 = [[3, 5, 1, 0, 0, 78], [4, 1, 0, 1, 0, 36], [-5, -4, 0, 0, 1, 0]]
+        tables.append(current_table.copy())
+        current_iteration += 1
+        current_table = tables[current_iteration]
 
-    current_table = tables[current_iteration]
-    print(current_table)
-    last_row = len(current_table) - 1
-    key_col = index_of_most_negative_element(current_table[last_row])
-    ratios = compute_ratios(current_table, key_col)
-    key_row = compute_key_row(ratios)
+        key_elems = [elem / key_elem for elem in current_table[key_row]]
 
-    print("Key col = ", key_col)
-    print("Key row = ", key_row)
+        print("After key row operation = ", key_elems)
+        for row in range(len(current_table)):
+            if row == key_row:
+                current_table[row] = key_elems
+                print("skipping, key row")
+                continue
+            else:
+                print("not key row")
+                multiplier = -(current_table[row][key_col])
+                print("Multipler for this iteration = ", multiplier)
+                print(row, key_col)
+                print(current_table)
+                for col in range(len(current_table[row])):
+                    val = current_table[row][col]
+                    elem_from_key_elems = key_elems[col]
+                    new_elem = val + (multiplier) * key_elems[col]
+                    current_table[row][col] = new_elem
+        print(current_table)
 
-    # change the basic variables list
-    basic_variables = change_basic_vars(basic_variables, key_row, key_col)
-    print("basic variables changed")
+        if check_optimality_condition(current_table):
+            print("The solution is optimal")
+            break
+
+    print("Printing tables")
+    print(tables)
     print(basic_variables)
+    print(tables[-1])
+    display_solution(tables[-1], basic_variables)
 
-    key_elem = current_table[key_row][key_col]
+    with tempfile.NamedTemporaryFile(delete=False, mode='wb') as temp_file:
+        pickle.dump(tables, temp_file)
+        temp_filename = temp_file.name
 
-    # creating new table for next iteration
-    tables.append(current_table.copy())
-    current_iteration+=1
-    current_table = tables[current_iteration] # T O D O: fix the above redundant line
+    return temp_filename
 
-
-    key_elems = [elem / key_elem for elem in current_table[key_row]]
-
-    print("After key row operation = ", key_elems)
-    for row in range(len(current_table)):
-        if row == key_row:
-            current_table[row] = key_elems
-            print("skipping, key row")
-            continue
-        else:
-            print("not key row")
-            multiplier = -(current_table[row][key_col])
-            print("Multipler for this iteration = ", multiplier)
-            print(row,key_col)
-            print(current_table)
-            for col in range(len(current_table[row])):
-                val = current_table[row][col]
-                elem_from_key_elems = key_elems[col]
-                # print(val, multiplier, elem_from_key_elems)
-                new_elem = val + (multiplier) * key_elems[col]
-                # print("new elem = ", new_elem)
-                current_table[row][col] = new_elem
-    print(current_table)
-
-    # checking for optimality condition
-    if check_optimality_condition(current_table):
-        print("The solution is optimal")
-        break
-
-print("Printing tables")
-print(tables)
-print(basic_variables)
-print(tables[-1])
-display_solution(tables[-1], basic_variables)
+#
+# if __name__ == "__main__":
+#     if sys.argc == 0:
+#         pass
+#     else:
+#         input_file = sys.argv[1]
+#         temp_filename = main(input_file)
+#         print(f"Data has been written to temporary file: {temp_filename}")
+#
