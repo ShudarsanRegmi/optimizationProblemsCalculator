@@ -23,6 +23,7 @@ The main goal of this project is to bring an optimization problems calculator to
 We would like to express our gratitude to the following contributors for their valuable inputs and efforts in making this project possible:
 - [Shudarsan Regmi](https://github.com/ShudarsanRegmi)
 - [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
 
 ## Collaboration
 We welcome collaboration from anyone interested in contributing to this project. If you have any ideas, suggestions, or would like to contribute code, please feel free to fork the repository and submit a pull request. Let's work together to make this optimization problems calculator a comprehensive tool for solving optimization problems.
