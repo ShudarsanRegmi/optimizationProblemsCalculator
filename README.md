@@ -13,11 +13,12 @@ The main goal of this project is to bring an optimization problems calculator to
 - **Additional Methods**: More optimization techniques and algorithms to be added.
 
 ## Todos
-- [ ] Write code for simplex method (maximization)
+- [ ] Write code for simplex method (maximization) - [Shudarsan Regmi](https://github.com/ShudarsanRegmi)
 - [ ] Write code for simplex method (minimization)
 - [ ] Write code for dual simplex method
-- [X] Write code for Newton-Raphson method
-- [X] Write code for Secant Method 
+- [X] Write code for Newton-Raphson method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [X] Write code for Secant Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [X] Write code for interval halving method - - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
 - [ ] Add more items to this list
 
 ## Contributors
