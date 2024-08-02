@@ -18,6 +18,8 @@ The main goal of this project is to bring an optimization problems calculator to
 - [ ] Write code for dual simplex method
 - [X] Write code for Newton-Raphson method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [X] Write code for Secant Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [X] Write Code for Hookes Jeeves Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [X] Write code for Unidirection Search Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)  
 - [X] Write code for interval halving method - - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
 - [ ] Add more items to this list
 
