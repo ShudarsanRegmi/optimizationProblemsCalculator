@@ -4,7 +4,7 @@ from sympy import symbols, lambdify
 
 # Define the function
 def f(x1, x2):
-    return 3*x1 + 23*x2 + 2*x1**2 + 4*x2**2
+    return (x1**3 + x2**3 + 2*x1**2 + 4*x2**2)
 
 # Initial inputs
 x0 = np.array([5, 5])
@@ -16,6 +16,7 @@ ep = 0.3
 
 # Symbolic variables
 x1, x2 = symbols('x1 x2')
+
 
 # Function lambdified for numerical computation
 f_lambdified = lambdify((x1, x2), f(x1, x2))
