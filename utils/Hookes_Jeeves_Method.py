@@ -8,7 +8,8 @@ variables = sp.symbols(' '.join([f'x{i+1}' for i in range(a)]))
 
 # Define the function
 f_expr = input(f"Enter the function containing {a} variables in the form x1, x2, ...: ")
-f = sp.lambdify(variables, sp.sympify(f_expr), 'numpy')
+f_sym = sp.sympify(f_expr)
+f = sp.lambdify(variables, f_sym, 'numpy')
 
 # Given values
 X1 = list(map(int, input(f"Enter the initial values of {', '.join([str(var) for var in variables])} separated by spaces: ").strip().split()))
@@ -47,8 +48,8 @@ for i in range(20):
         S = xmin - X1
 
         # To calculate lambda
-        delf = sp.Matrix([sp.diff(f_expr, var) for var in variables])
-        H = sp.hessian(f_expr, variables)
+        delf = sp.Matrix([sp.diff(f_sym, var) for var in variables])
+        H = sp.hessian(f_sym, variables)
         delfA = delf.subs([(variables[k], xmin[k]) for k in range(a)])
         S_mat = sp.Matrix(S)
         lambda_val = -delfA.dot(S_mat) / (S_mat.dot(H * S_mat))
