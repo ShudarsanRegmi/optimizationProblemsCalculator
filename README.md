@@ -21,7 +21,10 @@ The main goal of this project is to bring an optimization problems calculator to
 - [X] Write Code for Hookes Jeeves Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [X] Write code for Unidirection Search Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)  
 - [X] Write code for interval halving method - - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
-- [ ] Add more items to this list
+- [ ] Write Code for Simplex-Search-Method
+- [ ] Gradient-Based Methods
+- [ ] Conjugate Direction Methods 
+- [ ] Add more items to this lis
 
 ## Contributors
 We would like to express our gratitude to the following contributors for their valuable inputs and efforts in making this project possible:
