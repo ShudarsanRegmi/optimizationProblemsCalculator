@@ -67,8 +67,8 @@ def main():
     # Display results
     print(Resl)
     fopt = f_lambdified(x0[0], x0[1])
-    print(f'Optimal value of x = [{x0[0]:.6f}, {x0[1]:.6f}]')
-    print(f'Optimal value of f(x) = {fopt:.6f}')
+    print(f'Optimal value of x = [{x0[0]:.3f}, {x0[1]:.3f}]')
+    print(f'Optimal value of f(x) = {fopt:.3f}')
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
