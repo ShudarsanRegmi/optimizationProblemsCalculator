@@ -1,4 +1,5 @@
 import sympy as sp
+from tabulate import tabulate
 
 #Defing function to calculate the index of fibbonacci series from series value.
 def index_value_of_fib_series(series_value):
@@ -65,13 +66,13 @@ print("No. Of Itteration Needed: ",ittetration)
 print("\n")
 l0= b-a
 
+# List to store results for table display
+table_data = []
+
 for i in range(2,ittetration+1):
     if(ittetration-i>=0):
-        print("Itteration : ",i)
-        print("a =", a)
-        print("b =", b)
+        ittetrations = i-1
         l_star = (fib_Array(ittetration-i)/fib_Array(ittetration))*l0
-        print("l* =", l_star)
         x2 = b-l_star
         x1 = a+l_star
         f_x1_eqn = f_expr.subs({x:x1})
@@ -80,10 +81,7 @@ for i in range(2,ittetration+1):
         f_x2_eqn = f_expr.subs({x:x2})
         f_x2 = sp.simplify(f_x2_eqn)
 
-        print("x1 : ", x1)
-        print("x2 : ", x2)
-        print("f(x1) : ", f_x1)
-        print("f(x2) : ", f_x2)
+        table_data.append([ittetrations, l_star,a, b, x1, x2, f_x1, f_x2])
         if(x1<=x2):
             if(f_x1==f_x2):
                 a=x1
@@ -106,4 +104,10 @@ for i in range(2,ittetration+1):
 optimal_point = (a+b)/2
 optimal_eqn = f_expr.subs({x:optimal_point})
 optimal_value = sp.simplify(optimal_eqn)
+
+# Print the table
+headers = ["Itterations","L*[f(n-i)/fn]","a", "b", "x1", "x2", "f(x1)", "f(x2)"]
+print(tabulate(table_data, headers, tablefmt="grid"))
+
+# Print the optimal point and value
 print("The Optimal Point is :", optimal_point, "\nAnd The Optimal Value is: ", optimal_value)

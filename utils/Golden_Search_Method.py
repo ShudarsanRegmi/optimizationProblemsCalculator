@@ -1,4 +1,5 @@
 import sympy as sp
+from tabulate import tabulate
 
 #Defing function to calculate the index of fibbonacci series from series value.
 def index_value_of_fib_series(series_value):
@@ -42,9 +43,13 @@ print("Initial Point: (",a,",",b,")")
 print("Precision Percentage(%) = ", percentage)
 print("\n")
 
+# List to store results for table display
+table_data = []
+
 for i in range(1,ittetration+1):
-    print("a =", a)
-    print("b =", b)
+    ittetrations = i
+    # print("a =", a)
+    # print("b =", b)
     l0= b-a
     x2 = a+(0.618)*l0
     x1 = (a+b)-x2
@@ -54,10 +59,11 @@ for i in range(1,ittetration+1):
     f_x2_eqn = f_expr.subs({x:x2})
     f_x2 = sp.simplify(f_x2_eqn)
 
-    print("x1 : ", x1)
-    print("x2 : ", x2)
-    print("f(x1) : ", f_x1)
-    print("f(x2) : ", f_x2)
+    # print("x1 : ", x1)
+    # print("x2 : ", x2)
+    # print("f(x1) : ", f_x1)
+    # print("f(x2) : ", f_x2)
+    table_data.append([ittetrations, a, b, x1, x2, f_x1, f_x2])
     if(x1<=x2 and (ittetration-i)>0):
         if(f_x1>=f_x2):
             a=x1
@@ -66,9 +72,15 @@ for i in range(1,ittetration+1):
             b=x2
             print("Eliminating b \nPreserving a ")
     print("\n")
-print("a =", a)
-print("b =", b)
+# print("a =", a)
+# print("b =", b)
 optimal_point = (a+b)/2
 optimal_eqn = f_expr.subs({x:optimal_point})
 optimal_value = sp.simplify(optimal_eqn)
+
+# Print the table
+headers = ["Itterations","a", "b", "x1", "x2", "f(x1)", "f(x2)"]
+print(tabulate(table_data, headers, tablefmt="grid"))
+
+# Print the optimal point and value
 print("The Optimal Point is :", optimal_point, "\nAnd The Optimal Value is: ", optimal_value)
