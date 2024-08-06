@@ -22,7 +22,8 @@ The main goal of this project is to bring an optimization problems calculator to
 - [X] Write code for Unidirection Search Method  [Shyam Tripathi](https://github.com/TheShyamTripathi)  
 - [X] Write code for interval halving method -  [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
 - [X] Write code for Golden Search Algorithm (Minimization Problem) - [Arvind Srinivasana](https://github.com/Programmer-Arvind)
-- [X] Write code for Evolutionary Search Algorithm - [Kritika Agrahari](https://github.com/KritikaAgrahari) 
+- [X] Write code for Evolutionary Search Algorithm - [Kritika Agrahari](https://github.com/KritikaAgrahari)
+- [X] Simplex search method starting with three points = [Richa Kumar Jaishwal](https://github.com/richajaishwal0) 
 - [ ] Add more items to this list
 
 ## Contributors
