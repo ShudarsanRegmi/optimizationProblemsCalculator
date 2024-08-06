@@ -32,6 +32,7 @@ We would like to express our gratitude to the following contributors for their v
 - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
 - [Arvind Srinivasana](https://github.com/Programmer-Arvind)
 - [Kritika Agrahari](https://github.com/KritikaAgrahari)
+- [Richa Kumari Jaishwal](https://github.com/richajaishwal0)
 
 ## Collaboration
 We welcome collaboration from anyone interested in contributing to this project. If you have any ideas, suggestions, or would like to contribute code, please feel free to fork the repository and submit a pull request. Let's work together to make this optimization problems calculator a comprehensive tool for solving optimizatihttps://github.com/Programmer-Arvindon problems.
