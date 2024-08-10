@@ -34,7 +34,7 @@ We would like to express our gratitude to the following contributors for their v
 <a href="https://github.com/ShudarsanRegmi/optimizationProblemsCalculator/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ShudarsanRegmi/optimizationProblemsCalculator" />
 </a>
----
+
 - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
 - [Arvind Srinivasana](https://github.com/Programmer-Arvind)
