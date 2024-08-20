@@ -19,18 +19,34 @@ The main goal of this project is to bring an optimization problems calculator to
 - [X] Write code for Newton-Raphson method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [X] Write code for Secant Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [X] Write Code for Hookes Jeeves Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)
-- [X] Write code for Unidirection Search Method - [Shyam Tripathi](https://github.com/TheShyamTripathi)  
-- [X] Write code for interval halving method - - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
+- [X] Write code for Unidirection Search Method  [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [X] Write Code for Secant(Steepest) Descent Method  [Shyam Tripathi](https://github.com/TheShyamTripathi)
+- [X] Write code for interval halving method -  [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
+- [X] Write code for Golden Search Algorithm (Minimization Problem) - [Arvind Srinivasana](https://github.com/Programmer-Arvind)
+- [X] Write code for Evolutionary Search Algorithm - [Kritika Agrahari](https://github.com/KritikaAgrahari)
+- [X] Simplex search method starting with three points - [Richa Kumari Jaishwal](https://github.com/richajaishwal0) 
 - [ ] Add more items to this list
 
 ## Contributors
 We would like to express our gratitude to the following contributors for their valuable inputs and efforts in making this project possible:
 
+
+<a href="https://github.com/ShudarsanRegmi/optimizationProblemsCalculator/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ShudarsanRegmi/optimizationProblemsCalculator" />
+</a>
+
 - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
+- [Arvind Sivakumar](https://github.com/Programmer-Arvind)
+- [Kritika Agrahari](https://github.com/KritikaAgrahari)
+- [Richa Kumari Jaishwal](https://github.com/richajaishwal0)
+
+# ⭐️ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ShudarsanRegmi/optimizationProblemsCalculator&type=Date)](https://github.com/ShudarsanRegmi/optimizationProblemsCalculator/stargazers)
 
 ## Collaboration
-We welcome collaboration from anyone interested in contributing to this project. If you have any ideas, suggestions, or would like to contribute code, please feel free to fork the repository and submit a pull request. Let's work together to make this optimization problems calculator a comprehensive tool for solving optimization problems.
+We welcome collaboration from anyone interested in contributing to this project. If you have any ideas, suggestions, or would like to contribute code, please feel free to fork the repository and submit a pull request. Let's work together to make this optimization problems calculator a comprehensive tool for solving optimizatihttps://github.com/Programmer-Arvindon problems.
 
 ---
 
