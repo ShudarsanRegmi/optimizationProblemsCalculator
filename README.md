@@ -37,7 +37,7 @@ We would like to express our gratitude to the following contributors for their v
 
 - [Shyam Tripathi](https://github.com/TheShyamTripathi)
 - [Samudrala Sai Satya Vikas](https://github.com/Samudralavikas2005)
-- [Arvind Srinivasana](https://github.com/Programmer-Arvind)
+- [Arvind Sivakumar](https://github.com/Programmer-Arvind)
 - [Kritika Agrahari](https://github.com/KritikaAgrahari)
 - [Richa Kumari Jaishwal](https://github.com/richajaishwal0)
 
