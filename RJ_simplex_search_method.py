@@ -1,6 +1,6 @@
 import sympy as sp
 from sympy.utilities.lambdify import lambdify
-
+import math
 
 def print_table(headers, data):
     # Find the maximum length of each column for formatting
@@ -99,10 +99,26 @@ f = lambdify((x1, x2), expr)
 
 # Input for the vertices
 list_of_vertices = []
-print("Enter the three vertices:")
-for i in range(3):
-    vertex = list(map(float, input(f"Enter vertex {i + 1} (e.g., 1 2): ").split()))
-    list_of_vertices.append(vertex)
+var=int(input("Enter the no of vertices max(3):"))
+if var==2:
+    print("Enter the two variable  on that must be on same line(ex: (2.5,4) (2.5,6)")
+    for i in range(var):
+        vertex = list(map(float, input(f"Enter vertex {i + 1} (e.g., 1 2): ").split()))
+        list_of_vertices.append(vertex)
+    small_y_coor=list_of_vertices[0][1] if list_of_vertices[0][1] <list_of_vertices[1][1] else list_of_vertices[1][1]
+    large_y_coor=list_of_vertices[0][1] if list_of_vertices[0][1] >list_of_vertices[1][1] else list_of_vertices[1][1]
+    
+    y_coord=small_y_coor+(list_of_vertices[1][1]-list_of_vertices[0][1])/2
+    x_coord=list_of_vertices[0][0]+(large_y_coor-small_y_coor)*math.sqrt(3)
+    additional_vertex=[x_coord,y_coord]
+    print(additional_vertex)
+    list_of_vertices.append(additional_vertex)
+else:
+         for i in range(var):
+            vertex = list(map(float, input(f"Enter vertex {i + 1} (e.g., 1 2): ").split()))
+            list_of_vertices.append(vertex)
+
+
 
 print("Initial list of vertices:")
 initial_data = [
