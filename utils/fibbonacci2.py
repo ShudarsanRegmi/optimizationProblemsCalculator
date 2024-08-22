@@ -81,7 +81,12 @@ for i in range(2,ittetration+1):
         f_x2_eqn = f_expr.subs({x:x2})
         f_x2 = sp.simplify(f_x2_eqn)
 
-        table_data.append([ittetrations, l_star,a, b, x1, x2, f_x1, f_x2])
+        if(f_x1<=f_x2):
+            result = "L"
+        else:
+            result= "R"
+
+        table_data.append([ittetrations, l_star,a, b, x1, x2, f_x1, f_x2, result])
         if(x1<=x2):
             if(f_x1==f_x2):
                 a=x1
@@ -89,24 +94,19 @@ for i in range(2,ittetration+1):
                 break
             elif(f_x1>f_x2):
                 a=x1
-                print("Eliminating a \nPreserving b ")
             else:
                 b=x2
-                print("Eliminating b \nPreserving a ")
         else:
             if(f_x1<f_x2):
                 a=x1
-                print("Eliminating a \nPreserving b ")
             else:
                 b=x2
-                print("Eliminating b \nPreserving a ")
-        print("\n")
 optimal_point = (a+b)/2
 optimal_eqn = f_expr.subs({x:optimal_point})
 optimal_value = sp.simplify(optimal_eqn)
 
 # Print the table
-headers = ["Itterations","L*[f(n-i)/fn]","a", "b", "x1", "x2", "f(x1)", "f(x2)"]
+headers = ["Itterations","L*[f(n-i)/fn]","a", "b", "x1", "x2", "f(x1)", "f(x2)","L/R"]
 print(tabulate(table_data, headers, tablefmt="grid"))
 
 # Print the optimal point and value

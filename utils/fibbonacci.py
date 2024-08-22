@@ -74,7 +74,12 @@ for i in range(1, ittetration + 1):
     f_x2_eqn = f_expr.subs({x: x2})
     f_x2 = sp.simplify(f_x2_eqn)
 
-    table_data.append([itterations, ratio,a, b, x1, x2, f_x1, f_x2])
+    if(f_x1<=f_x2):
+        result = "L"
+    else:
+        result= "R"
+
+    table_data.append([itterations, ratio,a, b, x1, x2, f_x1, f_x2, result])
     
     if x1 <= x2:
         if f_x1 >= f_x2:
@@ -82,12 +87,13 @@ for i in range(1, ittetration + 1):
         else:
             b = x2
 
+
 optimal_point = (a + b) / 2
 optimal_eqn = f_expr.subs({x: optimal_point})
 optimal_value = sp.simplify(optimal_eqn)
 
 # Print the table
-headers = ["Itterations","f(n-k)/f(n-k+1)","a", "b", "x1", "x2", "f(x1)", "f(x2)"]
+headers = ["Itterations","f(n-k)/f(n-k+1)","a", "b", "x1", "x2", "f(x1)", "f(x2)", "L/R"]
 print(tabulate(table_data, headers, tablefmt="grid"))
 
 # Print the optimal point and value
