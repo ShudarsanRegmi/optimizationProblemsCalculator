@@ -1,1 +1,0 @@
-# Print the optimal point and value
