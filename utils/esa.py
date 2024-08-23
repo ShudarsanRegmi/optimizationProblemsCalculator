@@ -1,74 +1,72 @@
 import numpy as np
+import sympy as sp
 import pandas as pd
-from sympy import symbols, lambdify, sympify
 
-def main():
-    # Get user inputs
-    function_input = input("Enter the function f(x1, x2): ")
-    x0_input = input("Enter the initial values for x0 (comma-separated, e.g., 5,5): ")
-    x0 = np.array([float(x) for x in x0_input.split(',')])
+# Function to define the user input function with any number of variables
+def get_function(var_list):
+    expression = input("Enter the function in terms of " + ", ".join(var_list) + ": ")
+    return sp.sympify(expression)
 
-    del1 = float(input("Enter the value for del1: "))
-    del2 = float(input("Enter the value for del2: "))
-    Del = np.array([del1, del2])
+# Function to get user inputs for initial points and increments
+def get_initial_values(var_list):
+    initial_values = []
+    increments = []
+    for var in var_list:
+        initial_values.append(float(input(f"Enter the initial value for {var}: ")))
+        increments.append(float(input(f"Enter the increment for {var}: ")))
+    return np.array(initial_values), np.array(increments)
 
-    n = int(input("Enter the number of iterations (n): "))
-    ep = float(input("Enter the terminal condition (epsilon): "))
+# Function to calculate the function value at a given point
+def calc_function_value(f, point, var_list):
+    return float(f.subs({var: val for var, val in zip(var_list, point)}))
 
-    # Calculate the norm of Del
-    normDel = np.linalg.norm(Del)
+# User inputs
+num_vars = int(input("Enter the number of variables: "))
+var_list = [sp.symbols(f'x{i+1}') for i in range(num_vars)]
+f = get_function([str(var) for var in var_list])
+x0, Del = get_initial_values([str(var) for var in var_list])
+ep = float(input("Enter the tolerance (epsilon): "))
+max_iter = int(input("Enter the maximum number of iterations: "))
 
-    # Symbolic variables
-    x1, x2 = symbols('x1 x2')
+# Initialize
+normDel = np.linalg.norm(Del)
+rsl = []
 
-    # Parse the function input
-    f_sympy = sympify(function_input)
-    f_lambdified = lambdify((x1, x2), f_sympy)
+# Iteration process
+for i in range(max_iter):
+    fx0 = calc_function_value(f, x0, var_list)
+    increment = Del / 2
+    neighbors = []
+    
+    # Generate neighbors by adjusting one variable at a time
+    for j in range(num_vars):
+        neighbors.append(np.array(x0))
+        neighbors[j][j] += increment[j]
+    
+    # Evaluate the function at each neighbor point
+    f_values = [fx0] + [calc_function_value(f, point, var_list) for point in neighbors]
+    x_vector = [x0] + neighbors
+    fx, min_index = min((val, idx) for (idx, val) in enumerate(f_values))
+    xmin = x_vector[min_index]
+    
+    # Store the results
+    rsl.append([i, x0] + neighbors + [fx0] + f_values[1:] + [xmin])
+    x0 = xmin
+    
+    # Adjust increments if the point doesn't change
+    if fx == fx0:
+        Del = Del / 2
+        normDel = np.linalg.norm(Del)
+    
+    # Terminal conditions
+    if normDel <= ep:
+        break
 
-    # Iteration
-    rsl = []
-    for i in range(n):
-        fx0 = f_lambdified(x0[0], x0[1])
-        increment = Del / 2
+# Table display
+columns = ['Iteration', 'x0'] + [f'Neighbor_{j+1}' for j in range(num_vars)] + ['fx0'] + [f'f(Neighbor_{j+1})' for j in range(num_vars)] + ['xmin']
+Resl = pd.DataFrame(rsl, columns=columns)
+print(Resl)
 
-        A = x0 + increment
-        B = x0 - increment * np.array([1, -1])
-        C = x0 - increment
-        D = x0 + increment * np.array([1, -1])
-
-        fA = f_lambdified(A[0], A[1])
-        fB = f_lambdified(B[0], B[1])
-        fC = f_lambdified(C[0], C[1])
-        fD = f_lambdified(D[0], D[1])
-
-        x_vector = [x0, A, B, C, D]
-        f_vector = [fx0, fA, fB, fC, fD]
-
-        fx, min_index = min((val, idx) for (idx, val) in enumerate(f_vector))
-        xmin = x_vector[min_index]
-
-        rsl.append([i, x0, A, B, C, D, fx0, fA, fB, fC, fD, xmin])
-        x0 = xmin
-
-        # If point not change
-        if fx == fx0:
-            Del = Del / 2
-            normDel = np.linalg.norm(Del)
-
-        # Terminal conditions
-        if normDel <= ep:
-            n = i
-            break
-
-    # Convert results to DataFrame
-    columns = ['k', 'x0', 'A', 'B', 'C', 'D', 'fx0', 'fA', 'fB', 'fC', 'fD', 'xmin']
-    Resl = pd.DataFrame(rsl, columns=columns)
-
-    # Display results
-    print(Resl)
-    fopt = f_lambdified(x0[0], x0[1])
-    print(f'Optimal value of x = [{x0[0]:.3f}, {x0[1]:.3f}]')
-    print(f'Optimal value of f(x) = {fopt:.3f}')
-
-if __name__ == "__main__":
-    main()
+fopt = calc_function_value(f, x0, var_list)
+print(f"Optimal value of x = {x0}")
+print(f"Optimal value of f(x) = {fopt}")
