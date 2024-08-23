@@ -1,144 +1,72 @@
-import math
 import numpy as np
-import threading
-from typing import List, Tuple
+import sympy as sp
+import pandas as pd
 
-class Optimizer:
-    def __init__(self, num_vars: int, n: int, epsilon: float):
-        self.num_vars = num_vars
-        self.n = n
-        self.epsilon = epsilon
-        self.variables: List[Tuple[float, int]] = [(0, 0)] * num_vars
-        self.Del: List[float] = [0] * num_vars
+# Function to define the user input function with any number of variables
+def get_function(var_list):
+    expression = input("Enter the function in terms of " + ", ".join(var_list) + ": ")
+    return sp.sympify(expression)
 
-    def input_variables(self):
-        for i in range(self.num_vars):
-            while True:
-                try:
-                    coefficient = float(input(f"Enter the coefficient for x{i + 1}: "))
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
-            
-            while True:
-                try:
-                    power = int(input(f"Enter the power for x{i + 1}: "))
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a valid integer.")
-            
-            self.variables[i] = (coefficient, power)
+# Function to get user inputs for initial points and increments
+def get_initial_values(var_list):
+    initial_values = []
+    increments = []
+    for var in var_list:
+        initial_values.append(float(input(f"Enter the initial value for {var}: ")))
+        increments.append(float(input(f"Enter the increment for {var}: ")))
+    return np.array(initial_values), np.array(increments)
 
-    def input_deltas(self):
-        for i in range(self.num_vars):
-            while True:
-                try:
-                    self.Del[i] = float(input(f"Enter the value for del{i + 1}: "))
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
+# Function to calculate the function value at a given point
+def calc_function_value(f, point, var_list):
+    return float(f.subs({var: val for var, val in zip(var_list, point)}))
 
-    def norm(self, v: List[float]) -> float:
-        return np.linalg.norm(v)
+# User inputs
+num_vars = int(input("Enter the number of variables: "))
+var_list = [sp.symbols(f'x{i+1}') for i in range(num_vars)]
+f = get_function([str(var) for var in var_list])
+x0, Del = get_initial_values([str(var) for var in var_list])
+ep = float(input("Enter the tolerance (epsilon): "))
+max_iter = int(input("Enter the maximum number of iterations: "))
 
-    def function_value(self, x: List[float]) -> float:
-        result = 0.0
-        for i in range(self.num_vars):
-            coefficient = x[i]
-            power = self.variables[i][1]
-            result += coefficient * math.pow(coefficient, power)
-        return result
+# Initialize
+normDel = np.linalg.norm(Del)
+rsl = []
 
-    def log_iteration(self, iteration: int, Del: List[float], fx0: float, f_vector: List[float]):
-        print(f"Iteration {iteration}:")
-        print(f"Del: {Del}")
-        print(f"fx0: {fx0}")
-        print(f"f_vector: {f_vector}")
-        print()
+# Iteration process
+for i in range(max_iter):
+    fx0 = calc_function_value(f, x0, var_list)
+    increment = Del / 2
+    neighbors = []
+    
+    # Generate neighbors by adjusting one variable at a time
+    for j in range(num_vars):
+        neighbors.append(np.array(x0))
+        neighbors[j][j] += increment[j]
+    
+    # Evaluate the function at each neighbor point
+    f_values = [fx0] + [calc_function_value(f, point, var_list) for point in neighbors]
+    x_vector = [x0] + neighbors
+    fx, min_index = min((val, idx) for (idx, val) in enumerate(f_values))
+    xmin = x_vector[min_index]
+    
+    # Store the results
+    rsl.append([i, x0] + neighbors + [fx0] + f_values[1:] + [xmin])
+    x0 = xmin
+    
+    # Adjust increments if the point doesn't change
+    if fx == fx0:
+        Del = Del / 2
+        normDel = np.linalg.norm(Del)
+    
+    # Terminal conditions
+    if normDel <= ep:
+        break
 
-    def optimize(self):
-        results = []
+# Table display
+columns = ['Iteration', 'x0'] + [f'Neighbor_{j+1}' for j in range(num_vars)] + ['fx0'] + [f'f(Neighbor_{j+1})' for j in range(num_vars)] + ['xmin']
+Resl = pd.DataFrame(rsl, columns=columns)
+print(Resl)
 
-        for i in range(self.n):
-            fx0 = self.function_value(self.Del)
-
-            A = self.Del[:]
-            B = self.Del[:]
-            C = self.Del[:]
-            D = self.Del[:]
-
-            for j in range(self.num_vars):
-                A[j] = self.variables[j][0] + self.Del[j] / 2
-                B[j] = self.variables[j][0] - (self.Del[j] / 2) * (-1 if j % 2 else 1)
-                C[j] = self.variables[j][0] - self.Del[j] / 2
-                D[j] = self.variables[j][0] + (self.Del[j] / 2) * (-1 if j % 2 else 1)
-
-            x_vector = [self.Del, A, B, C, D]
-            f_vector = [0.0] * 5
-
-            def calculate_function_value(k: int):
-                f_vector[k] = self.function_value(x_vector[k])
-
-            threads = []
-            for k in range(5):
-                thread = threading.Thread(target=calculate_function_value, args=(k,))
-                threads.append(thread)
-                thread.start()
-
-            for thread in threads:
-                thread.join()
-
-            min_index = np.argmin(f_vector)
-            xmin = x_vector[min_index][0]
-
-            self.Del[0] = xmin
-            results.append(self.Del[:])
-
-            self.log_iteration(i + 1, self.Del, fx0, f_vector)
-
-            if self.norm(self.Del) <= self.epsilon:
-                break
-
-            if f_vector[min_index] == fx0:
-                self.Del = [d / 2 for d in self.Del]
-
-        print("Optimal value of x =", self.Del)
-        print("Optimal value of f(x) =", self.function_value(self.Del))
-
-        self.save_results_to_file(results)
-
-    def save_results_to_file(self, results: List[List[float]]):
-        with open("optimization_results.txt", "w") as file:
-            for result in results:
-                file.write(" ".join(f"{val:.6f}" for val in result) + "\n")
-        print("Results saved to optimization_results.txt")
-
-if __name__ == "__main__":
-    while True:
-        try:
-            num_vars = int(input("Enter the number of variables: "))
-            if num_vars > 0:
-                break
-        except ValueError:
-            print("Invalid input. Please enter a positive integer.")
-
-    while True:
-        try:
-            n = int(input("Enter the number of iterations (n): "))
-            if n > 0:
-                break
-        except ValueError:
-            print("Invalid input. Please enter a positive integer.")
-
-    while True:
-        try:
-            epsilon = float(input("Enter the terminal condition (epsilon): "))
-            if epsilon > 0:
-                break
-        except ValueError:
-            print("Invalid input. Please enter a positive number.")
-
-    optimizer = Optimizer(num_vars, n, epsilon)
-    optimizer.input_variables()
-    optimizer.input_deltas()
-    optimizer.optimize()
+fopt = calc_function_value(f, x0, var_list)
+print(f"Optimal value of x = {x0}")
+print(f"Optimal value of f(x) = {fopt}")
