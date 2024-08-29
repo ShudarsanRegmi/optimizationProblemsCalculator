@@ -25,7 +25,7 @@ The main goal of this project is to bring an optimization problems calculator to
 - [X] Write code for Golden Search Algorithm (Minimization Problem) - [Arvind Srinivasana](https://github.com/Programmer-Arvind)
 - [X] Write code for Evolutionary Search Algorithm - [Kritika Agrahari](https://github.com/KritikaAgrahari)
 - [X] Simplex search method starting with three points - [Richa Kumari Jaishwal](https://github.com/richajaishwal0)
-- [X] Write code for Fibonacci Search - [5 Lakhs](https://github.com/Niteshshah123) 
+- [X] Write code for Fibonacci Search - [Nitesh Shah](https://github.com/Niteshshah123) 
 - [ ] Add more items to this list
 
 ## Contributors
@@ -41,7 +41,7 @@ We would like to express our gratitude to the following contributors for their v
 - [Arvind Sivakumar](https://github.com/Programmer-Arvind)
 - [Kritika Agrahari](https://github.com/KritikaAgrahari)
 - [Richa Kumari Jaishwal](https://github.com/richajaishwal0)
-- [5 Lakhs](https://github.com/Niteshshah123)
+- [Nitesh Shah](https://github.com/Niteshshah123)
 
 # ⭐️ Star History
 
