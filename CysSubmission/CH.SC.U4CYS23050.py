@@ -1,4 +1,5 @@
 '''
+T1:
 Maximize: Z = 40x1 + 30x2
 Subject to: x1 + x2 <= 12
 2x1 + x2 <= 16
@@ -7,6 +8,34 @@ solution:
 x1 = 4.0
 x2 = 8.0
 Objective function value: 400.0
+'''
+
+'''
+T2:
+Maximize Z=3x1+2x2+4x3+x4
+subject to:
+2x1+3x2+x3+4x4<=8
+x1+4x2+2x3+5x4<=10
+3x1+x2+2x3+3x4<=7
+x1,x2,x3,x4>=0
+solution:
+x1 = 0
+x2 = 0
+x3 = 3.5
+x4 = 0
+Objective function value: 14.0
+'''
+
+'''
+MAX Z = x1 + 2x2 + 3x3 - x4
+subject to
+x1 + 2x2 + 3x3 +0x4= 15
+2x1 + x2 + 5x3 +0x4= 20
+x1 + 2x2 + x3 + x4 = 10
+and x1,x2,x3,x4 >= 0 
+solution:
+x1=2.5,x2=2.5,x3=2.5,x4=0
+Max Z=15
 '''
 
 def print_table(table, num_vars, num_constraints):
