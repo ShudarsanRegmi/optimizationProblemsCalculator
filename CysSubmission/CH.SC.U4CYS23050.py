@@ -38,6 +38,30 @@ x1=2.5,x2=2.5,x3=2.5,x4=0
 Max Z=15
 '''
 
+'''
+unbounded solution 
+MAX Z = 2x1 + 3x2
+subject to
+x1 + x2 >= 5
+-x1 + x2 >= 2
+and x1,x2 >= 0
+#convert it into < symbols
+solution:
+the solution to the given problem is unbounded.
+'''
+
+'''
+INFESIBLE SOLUTION
+MAX Z = 4x1 + 5x2
+subject to
+3x1 + 2x2 <= 4
+x1 - 2x2 >= 3
+x1 + x2 <= 1
+and x1,x2 >= 0 
+solution:
+infeasible solution
+'''
+
 def print_table(table, num_vars, num_constraints):
     print(f"{'Basic Variables':<15}|", end="")
     for j in range(num_vars):
@@ -76,6 +100,19 @@ def find_pivot_row(table, pivot_col):
                 pivot_row = i
     return pivot_row
 
+def check_degeneracy(table):
+    return any(row[-1] == 0 for row in table[:-1])
+
+def check_multiple_solutions(table, num_vars):
+    for j in range(num_vars):
+        if table[-1][j] == 0 and all(table[i][j] == 0 for i in range(len(table) - 1)):
+            return True
+    return False
+
+def check_infeasibility(table, num_constraints):
+    # Infeasibility occurs if there's an artificial variable with a non-zero value in the final solution.
+    return any(row[-1] < 0 for row in table[:num_constraints])
+
 def pivot(table, pivot_row, pivot_col):
     pivot_value = table[pivot_row][pivot_col]
     table[pivot_row] = [x / pivot_value for x in table[pivot_row]]
@@ -92,19 +129,29 @@ def simplex_method(table, is_maximize, num_vars, num_constraints):
         print(f"Iteration {iteration + 1}:")
         print_table(table, num_vars, num_constraints)
 
+        if check_degeneracy(table):
+            print("Degenerate solution detected.")
+
         pivot_col = find_pivot_column(table, is_maximize)
         if (is_maximize and table[-1][pivot_col] >= 0) or \
            (not is_maximize and table[-1][pivot_col] <= 0):
             print("Optimal solution found.")
+            if check_multiple_solutions(table, num_vars):
+                print("Multiple solutions exist.")
             break
 
         pivot_row = find_pivot_row(table, pivot_col)
         if pivot_row == -1:
-            print("Unbounded solution.")
+            print("Unbounded solution detected.")
             return
 
         pivot(table, pivot_row, pivot_col)
         iteration += 1
+
+        # Check infeasibility
+        if check_infeasibility(table, num_constraints):
+            print("Infeasible solution detected.")
+            return
 
     print("Final solution:")
     print_table(table, num_vars, num_constraints)
@@ -112,9 +159,8 @@ def simplex_method(table, is_maximize, num_vars, num_constraints):
     variable_values = [0] * num_vars
     for i in range(num_constraints):
         for j in range(num_vars):
-            if table[i][j] == 1:
-                if all(table[k][j] == 0 for k in range(num_constraints) if k != i):
-                    variable_values[j] = table[i][-1]
+            if table[i][j] == 1 and all(table[k][j] == 0 for k in range(num_constraints) if k != i):
+                variable_values[j] = table[i][-1]
 
     print("\nValues of decision variables:")
     for i in range(num_vars):
