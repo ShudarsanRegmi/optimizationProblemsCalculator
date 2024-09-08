@@ -1,0 +1,51 @@
+import math
+
+# Define the golden ratio
+golden_ratio = (math.sqrt(5) - 1) / 2
+
+# Function to perform the Golden Section Search for minimization
+def golden_section_search(f, a, b, tol=1e-5):
+    c = b - golden_ratio * (b - a)
+    d = a + golden_ratio * (b - a)
+    
+    while abs(b - a) > tol:
+        if f(c) < f(d):
+            b = d
+        else:
+            a = c
+        c = b - golden_ratio * (b - a)
+        d = a + golden_ratio * (b - a)
+    
+    return (b + a) / 2
+
+# Function to take user input for the equation
+def get_function_from_user():
+    expr = input("Enter a function of x (e.g., (x - 2)**2 + 3): ")
+    return lambda x: eval(expr)
+
+# Take user input for interval and function
+def main():
+    print("Golden Section Search Method")
+
+    # Get function from user
+    f = get_function_from_user()
+
+    # Get interval [a, b] from user
+    a = float(input("Enter the lower bound of the interval (a): "))
+    b = float(input("Enter the upper bound of the interval (b): "))
+
+    # Perform the search for minimization
+    min_x = golden_section_search(f, a, b)
+    print(f"The minimum occurs at x = {min_x}")
+    print(f"Minimum value of f(x) = {f(min_x)}")
+
+    # Ask if user wants to find the maximum as well
+    find_max = input("Do you want to find the maximum as well? (yes/no): ").lower()
+    if find_max == 'yes':
+        f_max = lambda x: -f(x)
+        max_x = golden_section_search(f_max, a, b)
+        print(f"The maximum occurs at x = {max_x}")
+        print(f"Maximum value of f(x) = {f(max_x)}")
+
+if __name__ == "__main__":
+    main()
