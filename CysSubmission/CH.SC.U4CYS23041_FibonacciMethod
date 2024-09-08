@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> fibonacci(int n) {
+    vector<int> fib(n + 1, 1);
+    for (int i = 2; i <= n; ++i)
+        fib[i] = fib[i - 1] + fib[i - 2];
+    return fib;
+}
+double fibonacciSearch(double (*f)(double), double a, double b, int n, bool maximize = false) {
+    auto fib = fibonacci(n);
+    double x1 = a + (double(fib[n - 2]) / fib[n]) * (b - a);
+    double x2 = a + (double(fib[n - 1]) / fib[n]) * (b - a);
+    for (int i = 1; i < n; ++i) {
+        double f1 = f(x1), f2 = f(x2);
+        if (maximize) f1 = -f1, f2 = -f2;
+        if (f1 > f2) a = x1, x1 = x2, x2 = a + (double(fib[n - i - 1]) / fib[n - i]) * (b - a);
+        else b = x2, x2 = x1, x1 = a + (double(fib[n - i - 2]) / fib[n - i]) * (b - a);
+    }
+    return (a + b) / 2;
+}
+
+double func(double x) { return (x - 2) * (x - 2); }
+int main() {
+    double a, b;
+    int n;
+    cout << "Enter the lower bound of the range: ";
+    cin >> a;
+    cout << "Enter the upper bound of the range: ";
+    cin >> b;
+    cout << "Enter the number of Fibonacci steps: ";
+    cin >> n;
+    cout << "Minimum at x = " << fibonacciSearch(func, a, b, n) << endl;
+    cout << "Maximum at x = " << fibonacciSearch(func, a, b, n, true) << endl;
+    return 0;
+}
