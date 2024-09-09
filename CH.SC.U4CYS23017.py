@@ -1,3 +1,34 @@
+'''Test Cases
+
+For Maximization
+
+Z = -3x1 - 2x2;
+
+Subject
+    1x1 + 1x2 >= 1;
+    1x1 + 1x2 <= 7;
+    1x1 + 2x2 >= 10;
+    0x1 + 1x2 <= 3;
+
+Required answer
+    Z = -18;
+    X1 = 4;
+    X2 = 3;
+
+For Minimization
+
+Z = 1x1 + 2x2 + 3x3
+
+subject 
+    2x1 - 1x2 + 1x3 >= 4;
+    1x1 + 1x2 + 2x3 <= 8;
+    0x1 + 1x2 - 1x3 >= 3;
+
+Required Solution
+    Z = 7;
+    X1 = 3;
+    X2 = 2;
+    X3 = 0;  '''
 import numpy as np
 
 def dual_simplex(c, A, b, inequalities, problem_type):
