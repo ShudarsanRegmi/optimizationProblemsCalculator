@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
+
+// Function to display the simplex table
+void displayTable(double table[][20], int m, int n) {
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            printf("%8.2lf ", table[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+// Function to find the pivot column
+int findPivotColumn(double table[][20], int m, int n) {
+    int pivotColumn = 0;
+    for (int j = 1; j < n; j++) {
+        if (table[m][j] < table[m][pivotColumn]) {
+            pivotColumn = j;
+        }
+    }
+    return pivotColumn;
+}
+
+// Function to find the pivot row
+int findPivotRow(double table[][20], int m, int pivotColumn) {
+    int pivotRow = 0;
+    double minRatio = INFINITY;
+    for (int i = 0; i < m; i++) {
+        if (table[i][pivotColumn] > 0) {
+            double ratio = table[i][0] / table[i][pivotColumn];
+            if (ratio < minRatio) {
+                minRatio = ratio;
+                pivotRow = i;
+            }
+        }
+    }
+    return pivotRow;
+}
+
+// Function to perform the pivot operation
+void pivotOperation(double table[][20], int m, int n, int pivotRow, int pivotColumn) {
+    double pivotElement = table[pivotRow][pivotColumn];
+    for (int j = 0; j <= n; j++) {
+        table[pivotRow][j] /= pivotElement;
+    }
+    for (int i = 0; i <= m; i++) {
+        if (i != pivotRow) {
+            double factor = table[i][pivotColumn];
+            for (int j = 0; j <= n; j++) {
+                table[i][j] -= factor * table[pivotRow][j];
+            }
+        }
+    }
+}
+
+// Function to check for optimality
+bool isOptimal(double table[][20], int m, int n) {
+    for (int j = 1; j < n; j++) {
+        if (table[m][j] < 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Two-Phase Simplex Method
+void twoPhaseSimplex(double table[][20], int m, int n) {
+    int phase = 1;
+    printf("Starting Phase %d...\n", phase);
+    while (phase <= 2) {
+        while (!isOptimal(table, m, n)) {
+            int pivotColumn = findPivotColumn(table, m, n);
+            int pivotRow = findPivotRow(table, m, pivotColumn);
+            printf("Pivot Column: %d, Pivot Row: %d\n", pivotColumn, pivotRow);
+            pivotOperation(table, m, n, pivotRow, pivotColumn);
+            displayTable(table, m, n);
+        }
+        phase++;
+        // Update table for Phase 2 if necessary
+        if (phase == 2) {
+            printf("Starting Phase %d...\n", phase);
+            // Modify the objective function row for Phase 2 here
+        }
+    }
+}
+
+int main() {
+    int m, n;
+    printf("Enter number of constraints (m): ");
+    scanf("%d", &m);
+    printf("Enter number of variables (n): ");
+    scanf("%d", &n);
+    
+    double table[20][20] = {0};  // Simplex table (change size if needed)
+
+    printf("Enter the Simplex table (augmented form with constraints):\n");
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            scanf("%lf", &table[i][j]);
+        }
+    }
+    
+    printf("Initial Simplex Table:\n");
+    displayTable(table, m, n);
+    
+    twoPhaseSimplex(table, m, n);
+    
+    printf("Optimal solution found!\n");
+    return 0;
+}
