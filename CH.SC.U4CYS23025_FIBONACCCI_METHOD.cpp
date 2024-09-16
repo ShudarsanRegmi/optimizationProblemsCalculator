@@ -1,68 +1,105 @@
 #include <iostream>
-#include <vector>
+#include <cmath>
+#include <functional>
 
-int fibonacci_search(const std::vector<int>& arr, int x) {
-    int n = arr.size();
+using namespace std;
 
-    // Initialize Fibonacci numbers
-    int fib_m_2 = 0; // (m-2)'th Fibonacci number
-    int fib_m_1 = 1; // (m-1)'th Fibonacci number
-    int fib_m = fib_m_1 + fib_m_2; // m'th Fibonacci number
+// Function to compute Fibonacci numbers
+int fibonacci(int n) {
+    if (n <= 1)
+        return n;
+    int fib = 0;
+    int a = 0, b = 1;
+    for (int i = 2; i <= n; i++) {
+        fib = a + b;
+        a = b;
+        b = fib;
+    }
+    return fib;
+}
 
-    // Find the smallest Fibonacci number greater than or equal to n
-    while (fib_m < n) {
-        fib_m_2 = fib_m_1;
-        fib_m_1 = fib_m;
-        fib_m = fib_m_1 + fib_m_2;
+// Fibonacci Search to find the minimum of a unimodal function
+double fibonacciSearchMin(function<double(double)> f, double a, double b, double tol) {
+    int k = 0;
+    while (fibonacci(k) < (b - a) / tol)
+        k++;
+
+    int fib_k = fibonacci(k);
+    int fib_k1 = fibonacci(k - 1);
+    int fib_k2 = fibonacci(k - 2);
+
+    double x1 = a + (fib_k1 / double(fib_k)) * (b - a);
+    double x2 = a + (fib_k2 / double(fib_k)) * (b - a);
+
+    while (fib_k2 > tol) {
+        if (f(x1) < f(x2)) {
+            b = x2;
+        } else {
+            a = x1;
+        }
+
+        x1 = a + (fib_k1 / double(fib_k)) * (b - a);
+        x2 = a + (fib_k2 / double(fib_k)) * (b - a);
+
+        fib_k = fib_k1;
+        fib_k1 = fib_k2;
+        fib_k2 = fib_k - fib_k1;
     }
 
-    // Mark the eliminated range from the front
-    int offset = -1;
+    return (a + b) / 2;
+}
 
-    // While there are elements to be inspected
-    while (fib_m > 1) {
-        // Calculate the index to be compared
-        int i = std::min(offset + fib_m_2, n - 1);
+// Fibonacci Search to find the maximum of a unimodal function
+double fibonacciSearchMax(function<double(double)> f, double a, double b, double tol) {
+    int k = 0;
+    while (fibonacci(k) < (b - a) / tol)
+        k++;
 
-        // If x is greater than the value at index i, cut the subarray array from offset to i
-        if (arr[i] < x) {
-            fib_m = fib_m_1;
-            fib_m_1 = fib_m_2;
-            fib_m_2 = fib_m - fib_m_1;
-            offset = i;
+    int fib_k = fibonacci(k);
+    int fib_k1 = fibonacci(k - 1);
+    int fib_k2 = fibonacci(k - 2);
+
+    double x1 = a + (fib_k1 / double(fib_k)) * (b - a);
+    double x2 = a + (fib_k2 / double(fib_k)) * (b - a);
+
+    while (fib_k2 > tol) {
+        if (f(x1) > f(x2)) {
+            b = x2;
+        } else {
+            a = x1;
         }
-        // If x is less than the value at index i, cut the subarray after i+1
-        else if (arr[i] > x) {
-            fib_m = fib_m_2;
-            fib_m_1 = fib_m_1 - fib_m_2;
-            fib_m_2 = fib_m - fib_m_1;
-        }
-        // Element found. Return index
-        else {
-            return i;
-        }
+
+        x1 = a + (fib_k1 / double(fib_k)) * (b - a);
+        x2 = a + (fib_k2 / double(fib_k)) * (b - a);
+
+        fib_k = fib_k1;
+        fib_k1 = fib_k2;
+        fib_k2 = fib_k - fib_k1;
     }
 
-    // Comparing the last element with x
-    if (fib_m_1 && arr[offset + 1] == x) {
-        return offset + 1;
-    }
+    return (a + b) / 2;
+}
 
-    // Element not found
-    return -1;
+double sampleFunction(double x) {
+    // Example function: f(x) = - (x - 2)^2 + 3
+    // This function has a maximum at x = 2
+    return - (x - 2) * (x - 2) + 3;
 }
 
 int main() {
-    std::vector<int> arr = {10, 22, 35, 40, 45, 50, 80, 82, 85, 90, 100, 110, 120, 130, 140, 150};
-    int x = 85;
-    
-    int result = fibonacci_search(arr, x);
-    
-    if (result != -1) {
-        std::cout << "Element found at index " << result << std::endl;
-    } else {
-        std::cout << "Element not found" << std::endl;
-    }
+    double a = 0;       // Lower bound of the interval
+    double b = 4;       // Upper bound of the interval
+    double tol = 1e-5;  // Tolerance for convergence
+
+    // Find minimum
+    double minPoint = fibonacciSearchMin(sampleFunction, a, b, tol);
+    cout << "The minimum point is at x = " << minPoint << endl;
+    cout << "The minimum value is f(x) = " << sampleFunction(minPoint) << endl;
+
+    // Find maximum
+    double maxPoint = fibonacciSearchMax(sampleFunction, a, b, tol);
+    cout << "The maximum point is at x = " << maxPoint << endl;
+    cout << "The maximum value is f(x) = " << sampleFunction(maxPoint) << endl;
 
     return 0;
 }
