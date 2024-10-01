@@ -31,3 +31,11 @@ subject to
 -x1 - 2x2 <= -3
 and x1,x2 >= 0
 https://cbom.atozmath.com/example/CBOM/Simplex.aspx?q=ds&q1=E1
+
+# Two Phase Method Problem
+MIN Z = x1 + x2
+subject to
+2x1 + x2 >= 4
+x1 + 7x2 >= 7
+and x1,x2 >= 0
+
