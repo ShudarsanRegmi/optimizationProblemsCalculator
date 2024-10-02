@@ -56,3 +56,12 @@ Minimize: 0.05674
 ```
 ![image](https://github.com/user-attachments/assets/d96aa608-b608-451b-8920-afc19ba837f0)
 
+# Secant method
+
+```
+f(x) = x**3 - x - 1
+x0 = 1, x1 = 2
+x6=1.32471
+∴f(x6)=f(1.32471)=-0.00004
+```
+https://atozmath.com/example/CONM/Bisection.aspx?q=se&q1=E1
