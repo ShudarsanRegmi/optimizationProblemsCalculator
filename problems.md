@@ -1,17 +1,21 @@
+
+```
 Maximize: Z = 40x1 + 30x2
 Subject to: x1 + x2 <= 12
 2x1 + x2 <= 16
 x1 >= 0, x2 >= 0
 Solution: Z = 400 @ x1 = 4 and x2 = 8
+```
 
-
+```
 Maximize: Z = 12x1 + 3x2 + x3
 Subject to: 10x1 + 2x2 + x3 <= 100
 7x1 + 3x2 + 2x3 <= 77
 2x1 + 4x2 + x3 <= 80
 x1 >= 0, x2 >= 0, x3 >= 0
+```
 
-
+```
 Minimize:
 Z = -4x1 - x2 - 3x3 - 5x4
 Subject to:
@@ -20,8 +24,9 @@ Subject to:
 -8x1 - 3x2 + 3x3 + 2x4 <= 20
 x1, x2, x3, x4 >= 0
 This is not optimizable due to not having positive ratio in the second iteration
+```
 
-
+```
 # Dual Simplex Method
 Find solution using dual-simplex method
 MAX Z = -2x1 - x2
@@ -31,18 +36,23 @@ subject to
 -x1 - 2x2 <= -3
 and x1,x2 >= 0
 https://cbom.atozmath.com/example/CBOM/Simplex.aspx?q=ds&q1=E1
+```
 
+```
 # Two Phase Method Problem
 MIN Z = x1 + x2
 subject to
 2x1 + x2 >= 4
 x1 + 7x2 >= 7
 and x1,x2 >= 0
+```
 
+```
 # Fibonacci Search
 F(X) = X**2
 Int: [-5, 15]
 
 Minimize: 0.05674 
-
+```
+![image](https://github.com/user-attachments/assets/d96aa608-b608-451b-8920-afc19ba837f0)
 
