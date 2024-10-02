@@ -39,3 +39,10 @@ subject to
 x1 + 7x2 >= 7
 and x1,x2 >= 0
 
+# Fibonacci Search
+F(X) = X**2
+Int: [-5, 15]
+
+Minimize: 0.05674 
+
+
