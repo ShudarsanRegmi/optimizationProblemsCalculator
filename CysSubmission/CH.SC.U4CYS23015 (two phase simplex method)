@@ -1,0 +1,170 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
+
+#define MAX 10
+#define INF DBL_MAX
+
+typedef struct {
+    double A[MAX][MAX]; // Coefficients of the constraints
+    double c[MAX];      // Coefficients of the objective function
+    double b[MAX];      // RHS of the constraints
+    int m;              // Number of constraints
+    int n;              // Number of variables
+} LP;
+
+void printTableau(LP lp, int phase) {
+    int i, j;
+    printf("Tableau (Phase %d):\n", phase);
+    for (i = 0; i < lp.m + 1; ++i) {
+        for (j = 0; j < lp.n + lp.m + 1; ++j) {
+            printf("%7.2f ", lp.A[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+int findPivotColumn(LP *lp) {
+    int j;
+    double min = 0;
+    int column = -1;
+    for (j = 0; j < lp->n + lp->m; ++j) {
+        if (lp->A[lp->m][j] < min) {
+            min = lp->A[lp->m][j];
+            column = j;
+        }
+    }
+    return column;
+}
+
+int findPivotRow(LP *lp, int pivotCol) {
+    int i;
+    double min = INF;
+    int row = -1;
+    for (i = 0; i < lp->m; ++i) {
+        if (lp->A[i][pivotCol] > 0) {
+            double ratio = lp->b[i] / lp->A[i][pivotCol];
+            if (ratio < min) {
+                min = ratio;
+                row = i;
+            }
+        }
+    }
+    return row;
+}
+
+void pivot(LP *lp, int pivotRow, int pivotCol) {
+    double pivotValue = lp->A[pivotRow][pivotCol];
+    int i, j;
+    for (j = 0; j < lp->n + lp->m + 1; ++j) {
+        lp->A[pivotRow][j] /= pivotValue;
+    }
+    lp->b[pivotRow] /= pivotValue;
+
+    for (i = 0; i < lp->m + 1; ++i) {
+        if (i != pivotRow) {
+            double ratio = lp->A[i][pivotCol];
+            for (j = 0; j < lp->n + lp->m + 1; ++j) {
+                lp->A[i][j] -= ratio * lp->A[pivotRow][j];
+            }
+            lp->b[i] -= ratio * lp->b[pivotRow];
+        }
+    }
+}
+
+void phaseOne(LP *lp) {
+    int i, j;
+    LP phaseOneLP = *lp;
+    int numArtificialVars = lp->m;
+    int numVars = lp->n + numArtificialVars;
+    for (i = 0; i < lp->m; ++i) {
+        phaseOneLP.A[i][numVars + i] = 1; // Add artificial variables
+    }
+
+    for (i = 0; i < numVars; ++i) {
+        phaseOneLP.c[i] = 0;
+    }
+    for (i = numVars; i < numVars + numArtificialVars; ++i) {
+        phaseOneLP.c[i] = 1;
+    }
+
+    phaseOneLP.m = lp->m;
+    phaseOneLP.n = numVars + numArtificialVars;
+
+    int pivotColumn, pivotRow;
+    while ((pivotColumn = findPivotColumn(&phaseOneLP)) != -1) {
+        pivotRow = findPivotRow(&phaseOneLP, pivotColumn);
+        if (pivotRow == -1) {
+            printf("Unbounded solution during Phase 1.\n");
+            exit(1);
+        }
+        pivot(&phaseOneLP, pivotRow, pivotColumn);
+        printTableau(phaseOneLP, 1);
+    }
+
+    for (i = 0; i < lp->m; ++i) {
+        if (phaseOneLP.b[i] < 0) {
+            printf("Infeasible solution.\n");
+            exit(1);
+        }
+    }
+}
+
+void phaseTwo(LP *lp) {
+    int i, j;
+    int pivotColumn, pivotRow;
+    while ((pivotColumn = findPivotColumn(lp)) != -1) {
+        pivotRow = findPivotRow(lp, pivotColumn);
+        if (pivotRow == -1) {
+            printf("Unbounded solution during Phase 2.\n");
+            exit(1);
+        }
+        pivot(lp, pivotRow, pivotColumn);
+        printTableau(*lp, 2);
+    }
+}
+
+int main() {
+    LP lp;
+
+    // Example problem setup:
+    // Maximize: 3x1 + 2x2
+    // Subject to:
+    // x1 + x2 <= 4
+    // x1 <= 2
+    // x2 <= 3
+    // x1, x2 >= 0
+
+    lp.m = 3; // Number of constraints
+    lp.n = 2; // Number of variables
+
+    // Objective function coefficients
+    lp.c[0] = -3; // Maximize 3x1 -> Minimize -3x1
+    lp.c[1] = -2; // Maximize 2x2 -> Minimize -2x2
+
+    // Constraints coefficients
+    lp.A[0][0] = 1; // x1
+    lp.A[0][1] = 1; // x2
+    lp.b[0] = 4;
+
+    lp.A[1][0] = 1; // x1
+    lp.A[1][1] = 0; // x2
+    lp.b[1] = 2;
+
+    lp.A[2][0] = 0; // x1
+    lp.A[2][1] = 1; // x2
+    lp.b[2] = 3;
+
+    phaseOne(&lp); // Run Phase 1 to find a feasible solution
+
+    // Reset objective function for Phase 2
+    for (int i = 0; i < lp.n; ++i) {
+        lp.c[i] = -lp.c[i]; // Revert sign for maximization
+    }
+
+    phaseTwo(&lp); // Run Phase 2 to find the optimal solution
+
+    printf("Optimal solution found.\n");
+    return 0;
+}
