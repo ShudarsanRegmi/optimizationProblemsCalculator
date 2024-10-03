@@ -1,0 +1,159 @@
+
+
+"""
+Example Usage:
+
+if __name__ == "__main__":
+    # Test case 1: Feasible and bounded problem
+    A1 = np.array([
+        [1, 1],
+        [1, -1],
+        [-1, 1]
+    ])
+    b1 = np.array([2, 1, 1])
+    c1 = np.array([-1, -2])
+    print("Optimal Solution for Test Case 1:", two_phase_simplex(A1, b1, c1))
+    
+    # Expected Output for Test Case 1:
+    # Optimal Solution for Test Case 1: [1. 1.]
+    
+    # Test case 2: Unbounded problem
+    A2 = np.array([
+        [1, 1],
+        [1, -1]
+    ])
+    b2 = np.array([1, 2])
+    c2 = np.array([-1, -1])
+    try:
+        print("Optimal Solution for Test Case 2:", two_phase_simplex(A2, b2, c2))
+    except Exception as e:
+        print(e)
+        
+    # Expected Output for Test Case 2:
+    # Problem is unbounded.
+
+    # Test case 3: No feasible solution
+    A3 = np.array([
+        [1, -1],
+        [1, 1]
+    ])
+    b3 = np.array([1, -1])
+    c3 = np.array([-1, -2])
+    try:
+        print("Optimal Solution for Test Case 3:", two_phase_simplex(A3, b3, c3))
+    except Exception as e:
+        print(e)
+    
+    # Expected Output for Test Case 3:
+    # No feasible solution in Phase 1
+"""
+
+import numpy as np
+
+# Function to print the tableau
+def print_tableau(tableau):
+    print("Tableau:")
+    print(tableau)
+
+# Phase 1: Add artificial variables and solve to get a feasible solution
+def phase1(A, b):
+    num_constraints, num_variables = A.shape
+    # Adding artificial variables
+    tableau = np.hstack([A, np.eye(num_constraints), b.reshape(-1, 1)])
+    
+    # Objective function: Minimize the sum of artificial variables
+    objective = np.hstack([np.zeros(num_variables), np.ones(num_constraints), 0])
+    tableau = np.vstack([tableau, objective])
+
+    print("Initial Tableau (Phase 1):")
+    print_tableau(tableau)
+
+    # Simplex method for Phase 1
+    while True:
+        # Check if all coefficients of artificial variables are zero
+        if np.all(tableau[-1, :-1] >= 0):
+            break  # Optimal solution for Phase 1
+        
+        # Choose pivot column (most negative value in the objective row)
+        pivot_col = np.argmin(tableau[-1, :-1])
+        if tableau[-1, pivot_col] >= 0:
+            break
+        
+        # Choose pivot row (smallest ratio of b[i] / a[i, pivot_col])
+        ratios = tableau[:-1, -1] / tableau[:-1, pivot_col]
+        ratios[ratios <= 0] = np.inf
+        pivot_row = np.argmin(ratios)
+        
+        # Pivot operation
+        pivot_element = tableau[pivot_row, pivot_col]
+        tableau[pivot_row] /= pivot_element
+        for i in range(len(tableau)):
+            if i != pivot_row:
+                tableau[i] -= tableau[i, pivot_col] * tableau[pivot_row]
+
+    print("Optimal Tableau (Phase 1):")
+    print_tableau(tableau)
+
+    # If artificial variables are not zero, no feasible solution
+    if np.any(tableau[-1, -1] != 0):
+        raise Exception("No feasible solution in Phase 1")
+    
+    return tableau[:-1, :num_variables], tableau[:-1, -1]  # Return updated tableau without artificial variables
+
+# Phase 2: Optimize the original objective function
+def phase2(A, b, c):
+    num_constraints, num_variables = A.shape
+    # Create tableau with just the original variables (no artificial variables)
+    tableau = np.hstack([A, b.reshape(-1, 1)])
+    # Append the original objective function at the bottom
+    tableau = np.vstack([tableau, np.hstack([c, 0])])
+
+    print("Initial Tableau (Phase 2):")
+    print_tableau(tableau)
+
+    # Simplex method for Phase 2
+    while True:
+        # Check if all coefficients are non-negative
+        if np.all(tableau[-1, :-1] >= 0):
+            break  # Optimal solution
+        
+        # Choose pivot column (most negative value in the objective row)
+        pivot_col = np.argmin(tableau[-1, :-1])
+        if tableau[-1, pivot_col] >= 0:
+            break
+        
+        # Choose pivot row (smallest positive ratio of b[i] / a[i, pivot_col])
+        pivot_col_values = tableau[:-1, pivot_col]
+        positive_values_mask = pivot_col_values > 0  # Consider only positive values
+        if not np.any(positive_values_mask):  # If no positive values, problem is unbounded
+            raise Exception("Problem is unbounded.")
+        
+        ratios = np.full_like(tableau[:-1, -1], np.inf, dtype=float)
+        ratios[positive_values_mask] = tableau[:-1, -1][positive_values_mask] / pivot_col_values[positive_values_mask]
+        pivot_row = np.argmin(ratios)
+        
+        # Pivot operation
+        pivot_element = tableau[pivot_row, pivot_col]
+        tableau[pivot_row] /= pivot_element
+        for i in range(len(tableau)):
+            if i != pivot_row:
+                tableau[i] -= tableau[i, pivot_col] * tableau[pivot_row]
+
+    print("Optimal Tableau (Phase 2):")
+    print_tableau(tableau)
+
+    # Check if solution is feasible
+    if np.any(tableau[:-1, -1] < 0):
+        raise Exception("Infeasible solution detected.")
+    
+    return tableau[:, -1]  # Return optimal solution
+
+# Main function
+def two_phase_simplex(A, b, c):
+    print("Phase 1: Finding Initial Feasible Solution")
+    A_phase1, b_phase1 = phase1(A, b)
+
+    print("Phase 2: Optimizing the Original Objective Function")
+    solution = phase2(A_phase1, b_phase1, c)
+
+    return solution[:-1]  # Exclude the last entry (which is the objective value)
