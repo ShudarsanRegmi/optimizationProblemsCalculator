@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
+
+#define MAX 10
+#define INF FLT_MAX
+
+// Function prototypes
+void printMatrix(float matrix[MAX][MAX], int rows, int cols);
+void phase1(float matrix[MAX][MAX], int rows, int cols, int basicVars[], int numOfVars);
+void phase2(float matrix[MAX][MAX], int rows, int cols, int basicVars[], int numOfVars);
+void pivot(float matrix[MAX][MAX], int rows, int cols, int pivotRow, int pivotCol);
+
+// Main function
+int main() {
+    int numOfVars, numOfConstraints;
+    float matrix[MAX][MAX];
+    int basicVars[MAX];
+
+    // Input number of variables and constraints
+    printf("Enter number of variables: ");
+    scanf("%d", &numOfVars);
+    printf("Enter number of constraints: ");
+    scanf("%d", &numOfConstraints);
+
+    // Input constraints matrix
+    printf("Enter the coefficients of the constraints (including right-hand side values):\n");
+    for (int i = 0; i < numOfConstraints; i++) {
+        for (int j = 0; j < numOfVars + 1; j++) {
+            scanf("%f", &matrix[i][j]);
+        }
+    }
+
+    // Set up basic variables
+    for (int i = 0; i < numOfConstraints; i++) {
+        basicVars[i] = numOfVars + i;
+    }
+
+    // Add artificial variables and phase 1
+    phase1(matrix, numOfConstraints, numOfVars + numOfConstraints, basicVars, numOfVars);
+
+    // Remove artificial variables and phase 2
+    phase2(matrix, numOfConstraints, numOfVars, basicVars, numOfVars);
+
+    return 0;
+}
+
+// Print the matrix
+void printMatrix(float matrix[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%6.2f ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Perform Phase 1 of the Two-Phase Simplex Method
+void phase1(float matrix[MAX][MAX], int rows, int cols, int basicVars[], int numOfVars) {
+    int i, j;
+    // Phase 1 Simplex logic
+    printf("Phase 1:\n");
+    printMatrix(matrix, rows, cols);
+
+    // Implement the Phase 1 Simplex algorithm here
+    // ...
+
+    // Assuming we have an initial feasible solution
+}
+
+// Perform Phase 2 of the Two-Phase Simplex Method
+void phase2(float matrix[MAX][MAX], int rows, int cols, int basicVars[], int numOfVars) {
+    int i, j;
+    // Phase 2 Simplex logic
+    printf("Phase 2:\n");
+    printMatrix(matrix, rows, cols);
+
+    // Implement the Phase 2 Simplex algorithm here
+    // ...
+
+    // Output optimal solution
+}
+
+// Perform pivot operation
+void pivot(float matrix[MAX][MAX], int rows, int cols, int pivotRow, int pivotCol) {
+    int i, j;
+    float pivotValue = matrix[pivotRow][pivotCol];
+
+    // Normalize pivot row
+    for (j = 0; j < cols; j++) {
+        matrix[pivotRow][j] /= pivotValue;
+    }
+
+    // Update other rows
+    for (i = 0; i < rows; i++) {
+        if (i != pivotRow) {
+            float factor = matrix[i][pivotCol];
+            for (j = 0; j < cols; j++) {
+                matrix[i][j] -= factor * matrix[pivotRow][j];
+            }
+        }
+    }
+}
