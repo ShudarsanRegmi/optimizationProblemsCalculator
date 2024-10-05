@@ -1,9 +1,9 @@
 '''
 Test Case 1:
 Enter 'max' for maximize/ 'min' for minizize: min
-Enter the function to minimize/maximize (in terms of x): x*(x-1.5)
-Enter the starting point of the interval (a): 0
-Enter the ending point of the interval (b): 1
+Enter the function to minimize/maximize (in terms of x (in terms of x (e.g.,'math.sin(x) + (x**2)/4')): x*(x-1.5)
+Enter the starting point of the interval (a)[if trigonometric function, give interval in degree] (e.g.,-90): 0
+Enter the ending point of the interval (b)[if trigonometric function, give interval in degree] (e.g.,90): 1
 Do you want to use tolerance (T) or percentage constraint (P)? p
 Enter the percentage constraint (e.g., 10 for 10%): 10
 Iteration 1: Interval [0.5, 1.0]
@@ -13,9 +13,9 @@ The minimum value is approximately at x = 0.75 with function value f(x) = -0.562
 
 Test Case 2:
 Enter 'max' for maximize/ 'min' for minizize: max
-Enter the function to minimize/maximize (in terms of x): x*(x-1.5)
-Enter the starting point of the interval (a): 0
-Enter the ending point of the interval (b): 1
+Enter the function to minimize/maximize (in terms of x (in terms of x (e.g.,'math.sin(x) + (x**2)/4')): x*(x-1.5)
+Enter the starting point of the interval (a)[if trigonometric function, give interval in degree] (e.g.,-90): 0
+Enter the ending point of the interval (b)[if trigonometric function, give interval in degree] (e.g.,90): 1
 Do you want to use tolerance (T) or percentage constraint (P)? t
 Enter the tolerance value (e.g., 0.1): 0.1
 Iteration 1: Interval [0.0, 0.5]
@@ -23,6 +23,26 @@ Iteration 2: Interval [0.0, 0.25]
 Iteration 3: Interval [0.0, 0.125]
 Iteration 4: Interval [0.0, 0.0625]
 The maximum value is approximately at x = 0.03125 with function value f(x) = -0.0458984375
+
+Test Case 3:
+Enter 'max' for maximize/ 'min' for minizize: max
+Enter the function to minimize/maximize (in terms of x (e.g.,'math.sin(x) + (x**2)/4')): math.cos(x)
+Enter the starting point of the interval (a)[if trigonometric function, give interval in degree] (e.g.,-90): -90
+Enter the ending point of the interval (b)[if trigonometric function, give interval in degree] (e.g.,90): 90
+Do you want to use tolerance (T) or percentage constraint (P)? t
+Enter the tolerance value (e.g., 0.1): 0.1
+Iteration 1: Interval [-45.0, 45.0]
+Iteration 2: Interval [-22.5, 22.5]
+Iteration 3: Interval [-11.25, 11.25]
+Iteration 4: Interval [-5.625, 5.625]
+Iteration 5: Interval [-2.8125, 2.8125]
+Iteration 6: Interval [-1.40625, 1.40625]
+Iteration 7: Interval [-0.703125, 0.703125]
+Iteration 8: Interval [-0.3515625, 0.3515625]
+Iteration 9: Interval [-0.17578125, 0.17578125]
+Iteration 10: Interval [-0.087890625, 0.087890625]
+Iteration 11: Interval [-0.0439453125, 0.0439453125]
+The maximum value is approximately at x = 0.0 with function value f(x) = 1.0
 '''
 
 import math
@@ -170,7 +190,7 @@ def interval_halving(func, a, b, tol=None, percentage=None):
 choice=input("Enter 'max' for maximize/ 'min' for minizize: ")
 
 # Get function input from user
-func_input = input("Enter the function to minimize/maximize (in terms of x): ")
+func_input = input("Enter the function to minimize/maximize (in terms of x (e.g.,'math.sin(x) + (x**2)/4')): ")
 # Example input: (x - 2)**2 + math.sin(5 * x)
 
 # Convert the string into a function
@@ -178,8 +198,8 @@ def user_function(x):
     return eval(func_input)
 
 # Get interval input from user
-a = float(input("Enter the starting point of the interval (a): "))
-b = float(input("Enter the ending point of the interval (b): "))
+a = float(input("Enter the starting point of the interval (a)[if trigonometric function, give interval in degree] (e.g.,-90): "))
+b = float(input("Enter the ending point of the interval (b)[if trigonometric function, give interval in degree] (e.g.,90): "))
 
 # Ask the user if they want to use tolerance or percentage constraint
 method_choice = input("Do you want to use tolerance (T) or percentage constraint (P)? ").lower()
