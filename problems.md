@@ -65,3 +65,34 @@ x6=1.32471
 ∴f(x6)=f(1.32471)=-0.00004
 ```
 https://atozmath.com/example/CONM/Bisection.aspx?q=se&q1=E1
+
+# Interval Halving Method
+
+### Problem 1
+```
+f(x) = x * (x - 1.5)
+Optimal Point: 0.75
+Optimal Value: -0.5625
+```
+
+
+### Problem 2
+```
+x**3 - 6*x**2 + 4*x + 12
+Interval: [-2, 6]
+---
+Given Accuracy: 10%
+n >=7
+-- 
+Optimal Point = 3.65625
+Optimal Value = -4.70663
+```
+
+### Problem 3
+```
+f(x) = x**2 + 54/x
+a = 2.5
+b = 4.5
+Optimal Value: 27
+Optimal Point: 3
+```
