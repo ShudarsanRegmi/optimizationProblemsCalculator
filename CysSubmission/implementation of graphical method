@@ -1,0 +1,40 @@
+# Function to calculate the objective function Z = c1*x1 + c2*x2
+def objective_function(x1, x2, c1, c2):
+    return c1 * x1 + c2 * x2
+
+# Predefined values for objective function coefficients
+def get_objective_function_coefficients():
+    c1 = 3  # Coefficient for x1
+    c2 = 4  # Coefficient for x2
+    return c1, c2
+
+# Predefined corner points
+def get_predefined_corner_points():
+    points = [
+        (3, 5),  # Point 1
+        (5, 3),  # Point 2
+        (3, 3),  # Point 3
+        (35, 35),  # Point 4 (potentially unrealistic)
+        (0, 0)   # Point 5
+    ]
+    return points
+
+# Function to evaluate Z at each corner point
+def evaluate_corner_points(points, c1, c2):
+    Z_values = [objective_function(x1, x2, c1, c2) for x1, x2 in points]
+    
+    # Print Z values at each corner point
+    for i, (x1, x2) in enumerate(points):
+        print(f'Point {i + 1}: (x1, x2) = ({x1}, {x2}), Z = {Z_values[i]}')
+
+    # Find the point with the maximum Z value
+    max_Z = max(Z_values)
+    max_index = Z_values.index(max_Z)
+    optimal_point = points[max_index]
+
+    print(f'\nOptimal solution is at (x1, x2) = {optimal_point} with Z = {max_Z}')
+
+# Main program
+c1, c2 = get_objective_function_coefficients()  # Get predefined coefficients
+corner_points = get_predefined_corner_points()  # Use predefined corner points
+evaluate_corner_points(corner_points, c1, c2)  # Evaluate and find optimal solution
